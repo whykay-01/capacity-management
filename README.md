@@ -13,3 +13,9 @@ next, run the following command to build the docker image
 ```
 docker build -t equipment-dashboard .
 ```
+
+then, run the following command to run the docker image
+
+```
+docker run equipment-dashboard
+```
