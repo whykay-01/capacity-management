@@ -1,4 +1,4 @@
-# Yan's Repo With Projects Related to NYU Shanghai's IT center
+# Yan's Repo
 
 ## Documentation for the pythonProject folder
 
