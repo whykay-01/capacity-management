@@ -2,6 +2,7 @@ from dash import Dash, html, dcc
 import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
+import os
 
 
 def dashboard():
@@ -12,14 +13,12 @@ def dashboard():
         'text': '#111111'
     }
 
-    # 'Unique Users', 'User Type', 'Cycles'
-    user_cycle_df = pd.read_csv('user_cycle.csv')
-    # 'Equipment', 'Unique Users'
-    unique_user_equipment_df = pd.read_csv('unique_user_equipment.csv').sort_values(by="Unique Users", ascending=False)
-    # 'Equipment', 'Non Unique Users'
-    non_unique_user_equipment_df = pd.read_csv('non_unique_user_equipment.csv').sort_values(by="Users", ascending=False)
-    # 'Equipment', 'Cycles', 'Check Out Times'
-    equipment_cycle_df = pd.read_csv('equipment_cycle.csv').sort_values(by="Equipment", ascending=False)
+
+    path = '/data'
+    user_cycle_df = pd.read_csv(os.path.join(path, 'user_cycle.csv'))
+    unique_user_equipment_df = pd.read_csv(os.path.join(path, 'unique_user_equipment.csv')).sort_values(by="Unique Users", ascending=False)
+    non_unique_user_equipment_df = pd.read_csv(os.path.join(path, 'non_unique_user_equipment.csv')).sort_values(by="Users", ascending=False)
+    equipment_cycle_df = pd.read_csv(os.path.join(path, 'equipment_cycle.csv')).sort_values(by="Equipment", ascending=False)
 
     # creating a dictionary because the equipment usertype dataframe isn't in the correct format
     equipment_usertype_dict = {'Equipment': [], 'User Type': [], 'Count': []}
