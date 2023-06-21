@@ -45,3 +45,11 @@ FileNotFoundError: [Errno 2] No such file or directory: '/data/user_cycle.csv'
 ## Notes:
 
 I have slightly modififed the python `dashboard.py` file where the path is '/data' instead of os.getcwd().
+
+## Links for my reference:
+
+1. https://docs.docker.com/engine/reference/builder/
+2. https://docs.docker.com/engine/reference/builder/#cmd
+3. https://docs.docker.com/engine/reference/commandline/run/
+4. https://docs.docker.com/engine/reference/commandline/build/
+5. https://docs.docker.com/engine/reference/commandline/run/#mount-volume--v---read-only
