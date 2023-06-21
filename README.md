@@ -8,7 +8,7 @@ cd pythonProject
 
 Docker should be installed on the local machine
 
-next, run the following command to build the docker image
+after navigating to the working directory, run the following command to build the docker image
 
 ```
 docker build -t equipment-dashboard .
