@@ -1,7 +1,4 @@
-# Yan's Repo
-
-## Documentation for the pythonProject folder
-
+## Quickstart Guide on Dockerizing the Loaning System Dashboard
 
 Before we start, it is important to move to the working directory:
 
@@ -42,7 +39,3 @@ docker run -p 8050:8050 --name dashboard-container my-dashboard-app
 ```
 
 this command creates the `dashboard-container` container, and runs the `my-dashboard-app` image within the scope of the container.
-
-FIXME: create a container, so that Docker doesn't have to generate the new container from the image every time we run the application.
-
-
