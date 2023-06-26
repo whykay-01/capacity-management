@@ -3,7 +3,7 @@
 Before we start, it is important to move to the working directory:
 
 ```
-cd pythonProject
+cd loaning-system
 ```
 
 <!-- Let's first install the dependencies and create a virtual environment for the python app:
