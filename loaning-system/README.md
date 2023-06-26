@@ -6,7 +6,7 @@ Before we start, it is important to move to the working directory:
 cd pythonProject
 ```
 
-Let's first install the dependencies and create a virtual environment for the python app:
+<!-- Let's first install the dependencies and create a virtual environment for the python app:
 
 ```
 python3 -m venv .venv
@@ -22,7 +22,7 @@ Now, let's install the dependencies on our local machine:
 
 ```
 pip install -r requirements.txt
-```
+``` -->
 
 ##### NOTE: Docker should be installed on the local machine prior to deploying the application.
 
