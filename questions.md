@@ -37,6 +37,8 @@ I am getting the following error:
 FileNotFoundError: [Errno 2] No such file or directory: '/data/user_cycle.csv'
 ```
 
+UPD: I have managed to build the container with the data sources and the application contained in one container. I have also managed to build two separate containers for the data sources and the application. However, I am still struggling to connect those two containers together. (June 25-26, 2023)
+
 ## Questions:
 
 1. How to make the connection between those two containers, so that the python app can access the data sources?
