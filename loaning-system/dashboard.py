@@ -13,8 +13,6 @@ def dashboard():
         'text': '#111111'
     }
 
-
-    # path = '/data'
     path = os.getcwd()
     user_cycle_df = pd.read_csv(os.path.join(path, 'user_cycle.csv'))
     unique_user_equipment_df = pd.read_csv(os.path.join(path, 'unique_user_equipment.csv')).sort_values(by="Unique Users", ascending=False)
