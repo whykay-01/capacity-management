@@ -14,7 +14,8 @@ def dashboard():
     }
 
 
-    path = '/data'
+    # path = '/data'
+    path = os.getcwd()
     user_cycle_df = pd.read_csv(os.path.join(path, 'user_cycle.csv'))
     unique_user_equipment_df = pd.read_csv(os.path.join(path, 'unique_user_equipment.csv')).sort_values(by="Unique Users", ascending=False)
     non_unique_user_equipment_df = pd.read_csv(os.path.join(path, 'non_unique_user_equipment.csv')).sort_values(by="Users", ascending=False)
@@ -344,8 +345,7 @@ def dashboard():
 
     ])
 
-    app.run(debug=True)
-
+    app.run_server(host='0.0.0.0', port=8050, debug=True)
 
 if __name__ == "__main__":
     dashboard()
