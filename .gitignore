@@ -1,1 +1,5 @@
 .vscode
+loaning-system/__pycache__
+loaning-system/.venv
+learning-langchains/__pycache__
+learning-langchains/.venv
