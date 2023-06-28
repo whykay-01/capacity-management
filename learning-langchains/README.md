@@ -29,3 +29,11 @@ Now, let's install the package on our local machine:
 ```
 pip install 'langchain[all]'
 ```
+
+Side notes:
+
+In this repo I am focusing on the creation of the [agents](https://langchain-langchain.vercel.app/docs/modules/agents/) and exploring how does the storage unit works within the scope of language chains. Viable plan for today would be:
+
+1. Create a simple agent that will be able to interact with the storage unit.
+2. Create a simple storage unit that will be able to store the data.
+3. Report back on the progress and then start working on specific tasks.
