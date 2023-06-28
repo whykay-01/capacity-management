@@ -37,3 +37,7 @@ In this repo I am focusing on the creation of the [agents](https://langchain-lan
 1. Create a simple agent that will be able to interact with the storage unit.
 2. Create a simple storage unit that will be able to store the data.
 3. Report back on the progress and then start working on specific tasks.
+
+Side notes p.2: 
+
+1. All the functions and classes are available in [github repo](https://github.com/hwchase17/langchain/blob/master/langchain/), so I will be using them as a reference point. All the classes available for the functionality are also available there.
