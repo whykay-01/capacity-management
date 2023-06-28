@@ -2,4 +2,5 @@
 loaning-system/__pycache__
 loaning-system/.venv
 learning-langchains/__pycache__
-learning-langchains/.venv
+learning-langchains/venv/
+learning-langchains/.env
