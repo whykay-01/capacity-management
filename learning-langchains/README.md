@@ -41,3 +41,7 @@ In this repo I am focusing on the creation of the [agents](https://langchain-lan
 Side notes p.2: 
 
 1. All the functions and classes are available in [github repo](https://github.com/hwchase17/langchain/blob/master/langchain/), so I will be using them as a reference point. All the classes available for the functionality are also available there.
+
+# IMPORTANT
+
+pip uninstall langflow
