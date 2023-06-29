@@ -11,13 +11,13 @@ Langchain is a framework that allows the end-user to interact with a variety of 
 First of all, the package is gigantic, and therefore I suggest to create a virtual environment. 
 
 ```
-python3 -m venv .venv
+python3 -m venv venv
 ```
 
 Once the virtual environment is installed, let's activate it:
 
 ```
-source .venv/bin/activate
+source venv/bin/activate
 ```
 
 Now, let's install the package on our local machine:
@@ -27,7 +27,7 @@ Now, let's install the package on our local machine:
 - NOTE2: the following command will be different for those who are not using `zsh` shell, so please consult the documentation first.
 
 ```
-pip install 'langchain[all]'
+pip install 'langchain[all]' --use-pep517
 ```
 
 Side notes:
