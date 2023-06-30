@@ -45,3 +45,10 @@ Side notes p.2:
 # IMPORTANT
 
 pip uninstall langflow
+
+# RESOURCES 
+1. https://community.openai.com/t/using-redis-for-embeddings/23517
+2. https://www.youtube.com/watch?v=au2WVVGUvc8&ab_channel=LiamOttley
+3. https://github.com/ToxyBorg/Hugging-Face-Hub-Langchain-Document-Embeddings
+4. https://medium.com/the-techlife/using-huggingface-openai-and-cohere-models-with-langchain-db57af14ac5b
+5. https://redis.io/docs/about/
