@@ -13,12 +13,21 @@ def dashboard():
         'text': '#111111'
     }
 
-    path = os.getcwd()
-    user_cycle_df = pd.read_csv(os.path.join(path, 'user_cycle.csv'))
-    unique_user_equipment_df = pd.read_csv(os.path.join(path, 'unique_user_equipment.csv')).sort_values(by="Unique Users", ascending=False)
-    non_unique_user_equipment_df = pd.read_csv(os.path.join(path, 'non_unique_user_equipment.csv')).sort_values(by="Users", ascending=False)
-    equipment_cycle_df = pd.read_csv(os.path.join(path, 'equipment_cycle.csv')).sort_values(by="Equipment", ascending=False)
+    # Get the mountpoint of the volume inside the container
+    volume_mountpoint = '/data'
 
+    # Set the path to the CSV files relative to the volume mountpoint
+    user_cycle_csv_path = os.path.join(volume_mountpoint, 'user_cycle.csv')
+    unique_user_equipment_csv_path = os.path.join(volume_mountpoint, 'unique_user_equipment.csv')
+    non_unique_user_equipment_csv_path = os.path.join(volume_mountpoint, 'non_unique_user_equipment.csv')
+    equipment_cycle_csv_path = os.path.join(volume_mountpoint, 'equipment_cycle.csv')
+
+    # Read the CSV files using the updated paths
+    user_cycle_df = pd.read_csv(user_cycle_csv_path)
+    unique_user_equipment_df = pd.read_csv(unique_user_equipment_csv_path).sort_values(by="Unique Users", ascending=False)
+    non_unique_user_equipment_df = pd.read_csv(non_unique_user_equipment_csv_path).sort_values(by="Users", ascending=False)
+    equipment_cycle_df = pd.read_csv(equipment_cycle_csv_path).sort_values(by="Equipment", ascending=False)
+    
     # creating a dictionary because the equipment usertype dataframe isn't in the correct format
     equipment_usertype_dict = {'Equipment': [], 'User Type': [], 'Count': []}
     for i in range(len(unique_user_equipment_df['Equipment'])):
