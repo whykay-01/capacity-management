@@ -1,7 +1,10 @@
 .vscode
 loaning-system/__pycache__
 loaning-system/.venv
-learning-langchains/__pycache__
-learning-langchains/venv/
-learning-langchains/.env
-learning-langchains/langchain/
+virtual-assistant/__pycache__
+virtual-assistant/venv/
+virtual-assistant/.env
+virtual-assistant/langchain/
+virtual-assistant/.langchain.db
+virtual-assistant/logs/
+virtual-assistant/langflow.db
