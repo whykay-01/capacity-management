@@ -1,0 +1,7 @@
+services:
+  dashboard:
+    image: dashboard-image-test:latest
+    volumes:
+      - ./data:/data
+    ports:
+      - 8050:8050

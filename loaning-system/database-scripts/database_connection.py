@@ -1,3 +1,7 @@
+"""
+This python script is generating the csv files using functions defined in the database.py file.
+"""
+
 import pandas as pd
 from database import equipment_cycle_database
 from database import user_cycle_database
@@ -26,7 +30,7 @@ def unique_user_equipment_csv(db=unique_user_equipment_database()):
     return unique_user_equipment
 
 
-#  Equipment, Unique Users (string)
+#  Equipment, Non-Unique Users (string)
 def non_unique_user_equipment_csv(db=non_unique_user_equipment_database()):
     non_unique_user_equipment = pd.DataFrame(db, columns=['Equipment', 'Users'])
     non_unique_user_equipment.to_csv('non_unique_user_equipment.csv', index=False)

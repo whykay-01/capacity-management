@@ -1,1 +1,10 @@
 .vscode
+loaning-system/__pycache__
+loaning-system/.venv
+virtual-assistant/__pycache__
+virtual-assistant/venv/
+virtual-assistant/.env
+virtual-assistant/langchain/
+virtual-assistant/.langchain.db
+virtual-assistant/logs/
+virtual-assistant/langflow.db

@@ -6,36 +6,26 @@ Before we start, it is important to move to the working directory:
 cd loaning-system
 ```
 
-<!-- Let's first install the dependencies and create a virtual environment for the python app:
-
-```
-python3 -m venv .venv
-```
-
-Once the virtual environment is installed, let's activate it:
-
-```
-source .venv/bin/activate
-```
-
-Now, let's install the dependencies on our local machine:
-
-```
-pip install -r requirements.txt
-``` -->
-
 ##### NOTE: Docker should be installed on the local machine prior to deploying the application.
+
+### Step 1
 
 Run the following command to build the docker image for the python application only (we will call the image `dashboard-image`):
 
-```
+```bash
 docker build -t dashboard-image .
 ```
 
-And then, run the following command to run the docker image (make sure the port matches the one in the `dashboard.py` file):
+### Step 2
 
-```
-docker run -p 8050:8050 --name dashboard-container dashboard-image
+Then, we need to create a volume mounted to the container. We will use the following command to start the process:
+
+```bash
+docker compose up -d  --build
 ```
 
-this command creates the `dashboard-container` container, and runs the `dashboard-image` image within the scope of the container.
+To open the system in the browser, run the following command and click on the suggested localhost link:
+
+```bash
+docker compose logs -f
+```
