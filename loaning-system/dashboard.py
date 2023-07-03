@@ -5,38 +5,16 @@ import plotly.graph_objects as go
 import os
 from dash.dependencies import Input, Output, State
 
-from application.utils import fill_dict_user_equipment
+from application.utils import fill_dict_user_equipment, load_dataframes
+
+app = Dash(__name__)
 
 
 def dashboard():
-    app = Dash(__name__)
-
     colors = {"background": "#ADD8E6", "text": "#111111"}
 
-    # Get the mountpoint of the volume inside the container
-    volume_mountpoint = "/data"
-
-    # Set the path to the CSV files relative to the volume mountpoint
-    user_cycle_csv_path = os.path.join(volume_mountpoint, "user_cycle.csv")
-    unique_user_equipment_csv_path = os.path.join(
-        volume_mountpoint, "unique_user_equipment.csv"
-    )
-    non_unique_user_equipment_csv_path = os.path.join(
-        volume_mountpoint, "non_unique_user_equipment.csv"
-    )
-    equipment_cycle_csv_path = os.path.join(volume_mountpoint, "equipment_cycle.csv")
-
-    # Read the CSV files using the updated paths
-    user_cycle_df = pd.read_csv(user_cycle_csv_path)
-    unique_user_equipment_df = pd.read_csv(unique_user_equipment_csv_path).sort_values(
-        by="Unique Users", ascending=False
-    )
-    non_unique_user_equipment_df = pd.read_csv(
-        non_unique_user_equipment_csv_path
-    ).sort_values(by="Users", ascending=False)
-    equipment_cycle_df = pd.read_csv(equipment_cycle_csv_path).sort_values(
-        by="Equipment", ascending=False
-    )
+    # loading the dataframes
+    user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df = load_dataframes()
 
     # creating a dictionary for unique use equipment
     equipment_usertype_dict = fill_dict_user_equipment(

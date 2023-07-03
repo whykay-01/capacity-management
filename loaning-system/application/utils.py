@@ -1,3 +1,8 @@
+import os
+
+import pandas as pd
+
+
 def fill_dict_user_equipment(dataframe, user_cycle_df, user_type):
     """
     this function fills the dictionary with the equipment and the number of unique users that have used it
@@ -59,3 +64,22 @@ def fill_dict_user_equipment(dataframe, user_cycle_df, user_type):
                 equipment_usertype_dict["Count"].append(1)
 
     return equipment_usertype_dict
+
+
+def load_dataframes():
+    # Get the mountpoint of the volume inside the container
+    volume_mountpoint = "/data"
+
+    # Set the path to the CSV files relative to the volume mountpoint
+    user_cycle_csv_path = os.path.join(volume_mountpoint, "user_cycle.csv")
+    unique_user_equipment_csv_path = os.path.join(volume_mountpoint, "unique_user_equipment.csv")
+    non_unique_user_equipment_csv_path = os.path.join(volume_mountpoint, "non_unique_user_equipment.csv")
+    equipment_cycle_csv_path = os.path.join(volume_mountpoint, "equipment_cycle.csv")
+
+    # Read the CSV files using the updated paths
+    user_cycle_df = pd.read_csv(user_cycle_csv_path)
+    unique_user_equipment_df = pd.read_csv(unique_user_equipment_csv_path).sort_values(by="Unique Users", ascending=False)
+    non_unique_user_equipment_df = pd.read_csv(non_unique_user_equipment_csv_path).sort_values(by="Users", ascending=False)
+    equipment_cycle_df = pd.read_csv(equipment_cycle_csv_path).sort_values(by="Equipment", ascending=False)
+
+    return [user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df]
