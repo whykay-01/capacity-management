@@ -1,3 +1,8 @@
+"""
+This python script is using the database file called test.csv to generate functions
+which are used to produce the csv files.
+"""
+
 main_database = []
 with open('test.csv', encoding='utf-8') as f:
     for line in f:
