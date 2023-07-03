@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 import os
 from dash.dependencies import Input, Output, State
 
-from application.utils import fill_dict_user_equipment, load_dataframes
+from app.utils import fill_dict_user_equipment, load_dataframes
 
 app = Dash(__name__)
 

@@ -1,6 +1,6 @@
 services:
   dashboard:
-    image: dashboard-image:latest
+    image: dashboard-image-test:latest
     volumes:
       - ./data:/data
     ports:
