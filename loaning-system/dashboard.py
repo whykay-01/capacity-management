@@ -3,6 +3,7 @@ import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
 import os
+from dash.dependencies import Input, Output, State
 
 
 def dashboard():
@@ -293,6 +294,33 @@ def dashboard():
                 'textAlign': 'center',
                 'color': colors['text']
             }
+        ),
+
+        html.H4(
+            children='Add new CSV files to the system: ', 
+            style={
+                'textAlign': 'left',
+                'color': colors['text']
+            }
+        ),
+
+        dcc.Upload(
+            id='upload-data',
+            children=html.Div([
+                'Drag and Drop or ',
+                html.A('Select Files')
+            ]),
+            style={
+                'width': '50%',
+                'height': '60px',
+                'lineHeight': '60px',
+                'borderWidth': '2px',
+                'borderStyle': 'dashed',
+                'borderRadius': '5px',
+                'textAlign': 'left',
+                'margin': '10px'
+            },
+            multiple=True
         ),
 
         html.H3(children='Non-Unique User Pie Chart', style={
