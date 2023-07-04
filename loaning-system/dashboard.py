@@ -23,26 +23,10 @@ def dashboard():
 
     # turning dictionary back into a dataframe and then sorting it (for top 5 and least 5)
     equipment_usertype_df = pd.DataFrame(data=equipment_usertype_dict)
-    dfg_top = (
-        equipment_usertype_df.groupby(["Equipment"])
-        .size()
-        .to_frame()
-        .sort_values([0], ascending=False)
-        .head(5)
-        .reset_index()
-    )
-    dfg_bottom = (
-        equipment_usertype_df.groupby(["Equipment"])
-        .size()
-        .to_frame()
-        .sort_values([0], ascending=True)
-        .head(5)
-        .reset_index()
-    )
-    final_top_df = equipment_usertype_df.merge(dfg_top)
-    final_bottom_df = (
-        equipment_usertype_df.merge(dfg_bottom).sort_values(by=0).reset_index()
-    )
+    
+    # calculating top 5 and least 5 equipment used
+    final_top_df = equipment_usertype_df.merge(top5_used_equipment(equipment_usertype_df))
+    final_bottom_df = equipment_usertype_df.merge(least5_used_equipment(equipment_usertype_df)).sort_values(by=0).reset_index()
 
     # creating a dictionary for non-unique use equipment
     non_unique_equipment_usertype_dict = fill_dict_user_equipment(

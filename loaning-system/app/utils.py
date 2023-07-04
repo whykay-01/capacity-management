@@ -83,3 +83,19 @@ def load_dataframes():
     equipment_cycle_df = pd.read_csv(equipment_cycle_csv_path).sort_values(by="Equipment", ascending=False)
 
     return [user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df]
+
+
+def top5_used_equipment(equipment_usertype_df):
+    """
+    this function returns the top 5 used equipment given the dataframe with user types and the equipment they use
+    """
+     
+    return equipment_usertype_df.groupby(["Equipment"]).size().to_frame().sort_values([0], ascending=False).head(5).reset_index()
+    
+
+def least5_used_equipment(equipment_usertype_df):
+    """
+    this function returns the least 5 used equipment given the dataframe with user types and the equipment they use
+    """
+    return equipment_usertype_df.groupby(["Equipment"]).size().to_frame().sort_values([0], ascending=True).head(5).reset_index()
+
