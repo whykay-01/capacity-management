@@ -19,47 +19,32 @@ def fill_dict_user_equipment(dataframe, user_cycle_df, user_type):
         user_list = dataframe[user_type][i].split(", ")
 
         for j in user_list:
-            if (
-                user_cycle_df.loc[user_cycle_df["Unique Users"] == j, "User Type"].iloc[
-                    0
-                ]
-                == "Staff"
-            ):
+            if (user_cycle_df.loc[user_cycle_df["Unique Users"] == j, "User Type"].iloc[0]== "Staff"):
+
                 equipment_usertype_dict["Equipment"].append(dataframe["Equipment"][i])
                 equipment_usertype_dict["User Type"].append("Staff")
                 equipment_usertype_dict["Count"].append(1)
 
-            elif (
-                user_cycle_df.loc[user_cycle_df["Unique Users"] == j, "User Type"].iloc[
-                    0
-                ]
-                == "Student"
-            ):
+            elif (user_cycle_df.loc[user_cycle_df["Unique Users"] == j, "User Type"].iloc[0]== "Student"):
+
                 equipment_usertype_dict["Equipment"].append(dataframe["Equipment"][i])
                 equipment_usertype_dict["User Type"].append("Student")
                 equipment_usertype_dict["Count"].append(1)
 
-            elif (
-                user_cycle_df.loc[user_cycle_df["Unique Users"] == j, "User Type"].iloc[
-                    0
-                ]
-                == "Faculty"
-            ):
+            elif (user_cycle_df.loc[user_cycle_df["Unique Users"] == j, "User Type"].iloc[0] == "Faculty"):
+
                 equipment_usertype_dict["Equipment"].append(dataframe["Equipment"][i])
                 equipment_usertype_dict["User Type"].append("Faculty")
                 equipment_usertype_dict["Count"].append(1)
 
-            elif (
-                user_cycle_df.loc[user_cycle_df["Unique Users"] == j, "User Type"].iloc[
-                    0
-                ]
-                == "IT"
-            ):
+            elif (user_cycle_df.loc[user_cycle_df["Unique Users"] == j, "User Type"].iloc[0] == "IT"):
+
                 equipment_usertype_dict["Equipment"].append(dataframe["Equipment"][i])
                 equipment_usertype_dict["User Type"].append("IT")
                 equipment_usertype_dict["Count"].append(1)
 
             else:
+                
                 equipment_usertype_dict["Equipment"].append(dataframe["Equipment"][i])
                 equipment_usertype_dict["User Type"].append("Other")
                 equipment_usertype_dict["Count"].append(1)
