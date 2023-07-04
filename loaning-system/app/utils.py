@@ -85,6 +85,46 @@ def load_dataframes():
     return [user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df]
 
 
+
+def generate_top_5_bar_chart(final_df):
+    """
+    this function takes the final dataframe and generates the top 5 bar chart (most or least used equipment)
+    :param final_df: dataframe of the final data
+    :return: plotly figure of the top 5 bar chart
+    """
+    fig_top_5_bar = px.histogram(
+        final_df,
+        x="Equipment",
+        y="Count",
+        color="User Type",
+        color_discrete_map={
+            "Student": px.colors.qualitative.Plotly[0],
+            "Staff": px.colors.qualitative.Plotly[1],
+            "Other": px.colors.qualitative.Plotly[3],
+            "Faculty": px.colors.qualitative.Plotly[2],
+            "IT": px.colors.qualitative.Plotly[4],
+        }
+    )
+
+    fig_top_5_bar_total = final_df.groupby("Equipment").sum(numeric_only=True)
+
+    # label for total number of cycles
+    fig_top_5_bar.add_trace(
+        go.Scatter(
+            x=fig_top_5_bar_total.index,
+            y=fig_top_5_bar_total["Count"],
+            text=fig_top_5_bar_total["Count"],
+            mode="text",
+            textposition="top center",
+            textfont=dict(size=14),
+            showlegend=False,
+        )
+    )
+    fig_top_5_bar.update_xaxes(categoryorder="total descending")
+
+    return fig_top_5_bar
+
+
 def top5_used_equipment(equipment_usertype_df):
     """
     this function returns the top 5 used equipment given the dataframe with user types and the equipment they use

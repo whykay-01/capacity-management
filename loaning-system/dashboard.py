@@ -149,63 +149,12 @@ def dashboard():
     )
 
     # top 5 bar graph
-    fig_top_5_bar_total = final_top_df.groupby("Equipment").sum(numeric_only=True)
-    fig_top_5_bar = px.histogram(
-        final_top_df,
-        x="Equipment",
-        y="Count",
-        color="User Type",
-        color_discrete_map={
-            "Student": px.colors.qualitative.Plotly[0],
-            "Staff": px.colors.qualitative.Plotly[1],
-            "Other": px.colors.qualitative.Plotly[3],
-            "Faculty": px.colors.qualitative.Plotly[2],
-            "IT": px.colors.qualitative.Plotly[4],
-        },
-    )
-    # label for total number of cycles
-    fig_top_5_bar.add_trace(
-        go.Scatter(
-            x=fig_top_5_bar_total.index,
-            y=fig_top_5_bar_total["Count"],
-            text=fig_top_5_bar_total["Count"],
-            mode="text",
-            textposition="top center",
-            textfont=dict(size=14),
-            showlegend=False,
-        )
-    )
-    fig_top_5_bar.update_xaxes(categoryorder="total descending")
+    fig_top_5_bar = generate_top_5_bar_chart(final_top_df)
 
     # least 5 bar graph
-    fig_least_5_bar_total = final_bottom_df.groupby("Equipment").sum(numeric_only=True)
-    fig_least_5_bar = px.histogram(
-        final_bottom_df,
-        x="Equipment",
-        y="Count",
-        color="User Type",
-        color_discrete_map={
-            "Student": px.colors.qualitative.Plotly[0],
-            "Staff": px.colors.qualitative.Plotly[1],
-            "Faculty": px.colors.qualitative.Plotly[2],
-            "Other": px.colors.qualitative.Plotly[3],
-            "IT": px.colors.qualitative.Plotly[4],
-        },
-    )
-    # label for total number of cycles
-    fig_least_5_bar.update_xaxes(categoryorder="total ascending")
-    fig_least_5_bar.add_trace(
-        go.Scatter(
-            x=fig_least_5_bar_total.index,
-            y=fig_least_5_bar_total["Count"],
-            text=fig_least_5_bar_total["Count"],
-            mode="text",
-            textposition="top center",
-            textfont=dict(size=14),
-            showlegend=False,
-        )
-    )
-
+    fig_least_5_bar = generate_top_5_bar_chart(final_bottom_df)
+    
+    
     # non-unique equipment bar graph
     non_unique_equipment_bar_total = non_unique_final_df.groupby("Equipment").sum(numeric_only=True)
     fig_non_unique_equipment_bar = px.histogram(
