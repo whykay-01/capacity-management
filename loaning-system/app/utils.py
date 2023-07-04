@@ -89,13 +89,13 @@ def top5_used_equipment(equipment_usertype_df):
     """
     this function returns the top 5 used equipment given the dataframe with user types and the equipment they use
     """
-     
-    return equipment_usertype_df.groupby(["Equipment"]).size().to_frame().sort_values([0], ascending=False).head(5).reset_index()
-    
+    intermediate_val = equipment_usertype_df.groupby(["Equipment"]).size().to_frame().sort_values([0], ascending=False).head(5).reset_index()
+    return equipment_usertype_df.merge(intermediate_val)
 
 def least5_used_equipment(equipment_usertype_df):
     """
     this function returns the least 5 used equipment given the dataframe with user types and the equipment they use
     """
-    return equipment_usertype_df.groupby(["Equipment"]).size().to_frame().sort_values([0], ascending=True).head(5).reset_index()
+    intermediate_val = equipment_usertype_df.groupby(["Equipment"]).size().to_frame().sort_values([0], ascending=True).head(5).reset_index()
+    return equipment_usertype_df.merge(intermediate_val).sort_values(by=0).reset_index()
 
