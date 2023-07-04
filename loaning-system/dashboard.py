@@ -10,7 +10,10 @@ from app.utils import (fill_dict_user_equipment,
                        top5_used_equipment, 
                        least5_used_equipment,
                        generate_top_5_bar_chart,
-                       update_graph_layouts)
+                       update_graph_layouts,
+                       generate_equipment_cycle_dict_daily,
+                       generate_time_series,
+                       generate_equipment_cycle_dict_monthly)
 
 app = Dash(__name__)
 
@@ -33,99 +36,13 @@ def dashboard():
     non_unique_final_df = non_unique_equipment_usertype_df.merge(dfg)
 
     # creating a dictionary for daily timeline because the equipment cycle dataframe isn't in the correct format
-    equipment_cycle_dict = {"Time": [], "Cycles": [], "Equipment": []}
-    for i in range(len(equipment_cycle_df["Equipment"])):
-        check_out_time_list = equipment_cycle_df["Check Out Times"][i].split(", ")
-        for j in check_out_time_list:
-            try:
-                index = equipment_cycle_dict["Time"].index(
-                    j, len(equipment_cycle_dict["Time"]) - 1
-                )
-                if (
-                    equipment_cycle_dict["Equipment"][index]
-                    != equipment_cycle_df["Equipment"][i]
-                ):
-                    equipment_cycle_dict["Time"].append(j)
-                    count = 0
-                    for k in range(int(equipment_cycle_df["Cycles"][i])):
-                        if check_out_time_list[k] == j:
-                            count += 1
-                    equipment_cycle_dict["Cycles"].append(count)
-                    equipment_cycle_dict["Equipment"].append(
-                        equipment_cycle_df["Equipment"][i]
-                    )
-            except ValueError:
-                equipment_cycle_dict["Time"].append(j)
-                count = 0
-                for k in range(int(equipment_cycle_df["Cycles"][i])):
-                    test = check_out_time_list[k]
-                    if test == j:
-                        count += 1
-                equipment_cycle_dict["Cycles"].append(count)
-                equipment_cycle_dict["Equipment"].append(
-                    equipment_cycle_df["Equipment"][i]
-                )
-
-    time_list = []
-    for i in range(len(equipment_cycle_df["Equipment"])):
-        check_out_time_list = equipment_cycle_df["Check Out Times"][i].split(", ")
-        # check_out_list = ['01/09/2021', '01/09/2021', '01/09/2021', ...]
-        for check_out_time in check_out_time_list:
-            if check_out_time not in time_list:
-                if len(time_list) == 0:
-                    time_list.append(check_out_time)
-                else:
-                    added = False
-                    for j in range(len(time_list) - 1, -1, -1):
-                        if (
-                            pd.to_datetime(
-                                time_list[j], dayfirst=True, format="%d/%m/%Y"
-                            ).isoformat()[0:10]
-                            < pd.to_datetime(
-                                check_out_time, dayfirst=True, format="%d/%m/%Y"
-                            ).isoformat()[0:10]
-                        ):
-                            time_list.insert(j + 1, check_out_time)
-                            added = True
-                            break
-
-                    if not added:
-                        time_list.insert(0, check_out_time)
+    equipment_cycle_dict_daily = generate_equipment_cycle_dict_daily(equipment_cycle_df)
 
     # creating a dictionary for monthly timeline because the equipment cycle dataframe isn't in the correct format
-    equipment_cycle_dict2 = {"Time": [], "Cycles": [], "Equipment": []}
-    for i in range(len(equipment_cycle_df["Equipment"])):
-        check_out_time_list = equipment_cycle_df["Check Out Times"][i].split(", ")
-        for j in check_out_time_list:
-            try:
-                index = equipment_cycle_dict2["Time"].index(
-                    j[3:10], len(equipment_cycle_dict2["Time"]) - 1
-                )
-                if (
-                    equipment_cycle_dict2["Equipment"][index]
-                    != equipment_cycle_df["Equipment"][i]
-                ):
-                    equipment_cycle_dict2["Time"].append(j[3:10])
-                    count = 0
-                    for k in range(int(equipment_cycle_df["Cycles"][i])):
-                        if check_out_time_list[k] == j[3:10]:
-                            count += 1
-                    equipment_cycle_dict2["Cycles"].append(count)
-                    equipment_cycle_dict2["Equipment"].append(
-                        equipment_cycle_df["Equipment"][i]
-                    )
-            except ValueError:
-                equipment_cycle_dict2["Time"].append(j[3:10])
-                count = 0
-                for k in range(int(equipment_cycle_df["Cycles"][i])):
-                    test = check_out_time_list[k][3:10]
-                    if test == j[3:10]:
-                        count += 1
-                equipment_cycle_dict2["Cycles"].append(count)
-                equipment_cycle_dict2["Equipment"].append(
-                    equipment_cycle_df["Equipment"][i]
-                )
+    equipment_cycle_dict_monthly = generate_equipment_cycle_dict_monthly(equipment_cycle_df)
 
+    time_list = generate_time_series(equipment_cycle_df)
+    
     # turning dictionary back into a dataframe and then sorting it
     equipment_usertype_df = fill_dict_user_equipment(unique_user_equipment_df, user_cycle_df, "Unique Users")
 
@@ -146,9 +63,6 @@ def dashboard():
         title_text="Total Cycles: " + str(fig_pie_total["Cycles"].sum())
     )
 
-    
-    
-    
     # non-unique equipment bar graph
     non_unique_equipment_bar_total = non_unique_final_df.groupby("Equipment").sum(numeric_only=True)
     fig_non_unique_equipment_bar = px.histogram(
@@ -179,10 +93,10 @@ def dashboard():
     fig_non_unique_equipment_bar.update_xaxes(categoryorder="total descending")
 
     # daily check out graph
-    fig_daily_timeline_df = pd.DataFrame(equipment_cycle_dict)
+    fig_daily_timeline_df = pd.DataFrame(equipment_cycle_dict_daily)
     fig_daily_timeline_total = fig_daily_timeline_df.groupby("Time").sum(numeric_only=True)
     fig_time_cycle = px.histogram(
-        equipment_cycle_dict,
+        equipment_cycle_dict_daily,
         x="Time",
         y="Cycles",
         color="Equipment",
@@ -203,10 +117,10 @@ def dashboard():
     fig_time_cycle.update_xaxes(categoryorder="array", categoryarray=time_list)
 
     # monthly check out graph
-    fig_monthly_timeline_df = pd.DataFrame(equipment_cycle_dict2)
+    fig_monthly_timeline_df = pd.DataFrame(equipment_cycle_dict_monthly)
     fig_monthly_timeline_total = fig_monthly_timeline_df.groupby("Time").sum(numeric_only=True)
     fig_time_cycle2 = px.histogram(
-        equipment_cycle_dict2,
+        equipment_cycle_dict_monthly,
         x="Time",
         y="Cycles",
         color="Equipment",
@@ -225,7 +139,7 @@ def dashboard():
         )
     )
 
-    # graph layouts ---------------------------------------------------------------------------------------------------
+    # graph layouts
     colors = {"background": "#ADD8E6", "text": "#111111"}
     update_graph_layouts(fig_pie, fig_top_5_bar, fig_least_5_bar, fig_non_unique_equipment_bar, fig_time_cycle, fig_time_cycle2, colors)
 
