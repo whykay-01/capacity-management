@@ -32,26 +32,6 @@ def dashboard():
     # loading the dataframes
     user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df = load_dataframes()
     
-    # turning the dictionary back into a dataframe and then sorting it (for non-unique use equipment)
-    non_unique_equipment_usertype_df = fill_dict_user_equipment(non_unique_user_equipment_df, user_cycle_df, "Users")
-    
-    dfg = (
-        non_unique_equipment_usertype_df.groupby(["Equipment"])
-        .size()
-        .to_frame()
-        .sort_values([0], ascending=False)
-        .reset_index()
-    )
-    non_unique_final_df = non_unique_equipment_usertype_df.merge(dfg)
-
-    # creating a dictionary for daily timeline because the equipment cycle dataframe isn't in the correct format
-    equipment_cycle_dict_daily = generate_equipment_cycle_dict_daily(equipment_cycle_df)
-
-    # creating a dictionary for monthly timeline because the equipment cycle dataframe isn't in the correct format
-    equipment_cycle_dict_monthly = generate_equipment_cycle_dict_monthly(equipment_cycle_df)
-
-    time_list = generate_time_series(equipment_cycle_df)
-    
     # turning dictionary back into a dataframe and then sorting it
     equipment_usertype_df = fill_dict_user_equipment(unique_user_equipment_df, user_cycle_df, "Unique Users")
 
@@ -65,90 +45,22 @@ def dashboard():
 
 
     # creating the graphs from the dataframes -------------------------------------------------------------------------
-    # pie chart 3668
-    fig_pie_total = user_cycle_df.groupby("User Type").sum(numeric_only=True)
-    fig_pie = px.pie(user_cycle_df, "User Type", "Cycles")
-    fig_pie.update_layout(
-        title_text="Total Cycles: " + str(fig_pie_total["Cycles"].sum())
-    )
+    
+    # pie chart: GRAPHS
+    fig_pie = generate_fig_pie(user_cycle_df)
 
-    # non-unique equipment bar graph
-    non_unique_equipment_bar_total = non_unique_final_df.groupby("Equipment").sum(numeric_only=True)
-    fig_non_unique_equipment_bar = px.histogram(
-        non_unique_final_df,
-        x="Equipment",
-        y="Count",
-        color="User Type",
-        color_discrete_map={
-            "Student": px.colors.qualitative.Plotly[0],
-            "Staff": px.colors.qualitative.Plotly[1],
-            "Others": px.colors.qualitative.Plotly[3],
-            "Faculty": px.colors.qualitative.Plotly[2],
-            "IT": px.colors.qualitative.Plotly[4],
-        },
-    )
-    # label for total numer of cycles
-    fig_non_unique_equipment_bar.add_trace(
-        go.Scatter(
-            x=non_unique_equipment_bar_total.index,
-            y=non_unique_equipment_bar_total["Count"],
-            text=non_unique_equipment_bar_total["Count"],
-            mode="text",
-            textposition="top center",
-            textfont=dict(size=14),
-            showlegend=False,
-        )
-    )
-    fig_non_unique_equipment_bar.update_xaxes(categoryorder="total descending")
+    # non-unique equipment bar graph: DATAFRAMES
+    non_unique_final_df = generate_non_unique_user_df(non_unique_user_equipment_df, user_cycle_df)
+    # non-unique equipment bar graph: GRAPHS
+    fig_non_unique_equipment_bar = generate_non_unique_user_equipment_bar(non_unique_final_df)
 
-    # daily check out graph
-    fig_daily_timeline_df = pd.DataFrame(equipment_cycle_dict_daily)
-    fig_daily_timeline_total = fig_daily_timeline_df.groupby("Time").sum(numeric_only=True)
-    fig_time_cycle = px.histogram(
-        equipment_cycle_dict_daily,
-        x="Time",
-        y="Cycles",
-        color="Equipment",
-        color_discrete_sequence=px.colors.qualitative.Bold,
-    )
-    # label for total number of cycles
-    fig_time_cycle.add_trace(
-        go.Scatter(
-            x=fig_daily_timeline_total.index,
-            y=fig_daily_timeline_total["Cycles"],
-            text=fig_daily_timeline_total["Cycles"],
-            mode="text",
-            textposition="top center",
-            textfont=dict(size=11),
-            showlegend=False,
-        )
-    )
-    fig_time_cycle.update_xaxes(categoryorder="array", categoryarray=time_list)
+    # daily check out graph: GRAPHS
+    fig_time_cycle = generate_fig_time_cycle(equipment_cycle_df)
 
-    # monthly check out graph
-    fig_monthly_timeline_df = pd.DataFrame(equipment_cycle_dict_monthly)
-    fig_monthly_timeline_total = fig_monthly_timeline_df.groupby("Time").sum(numeric_only=True)
-    fig_time_cycle2 = px.histogram(
-        equipment_cycle_dict_monthly,
-        x="Time",
-        y="Cycles",
-        color="Equipment",
-        color_discrete_sequence=px.colors.qualitative.Bold,
-    )
-    # label for total number of cycles
-    fig_time_cycle2.add_trace(
-        go.Scatter(
-            x=fig_monthly_timeline_total.index,
-            y=fig_monthly_timeline_total["Cycles"],
-            text=fig_monthly_timeline_total["Cycles"],
-            mode="text",
-            textposition="top center",
-            textfont=dict(size=14),
-            showlegend=False,
-        )
-    )
+    # monthly check out graph: GRAPHS
+    fig_time_cycle2 = generate_fig_time_cycle_month(equipment_cycle_df)
 
-    # graph layouts
+    # graph layouts and their background features
     colors = {"background": "#ADD8E6", "text": "#111111"}
     update_graph_layouts(fig_pie, fig_top_5_bar, fig_least_5_bar, fig_non_unique_equipment_bar, fig_time_cycle, fig_time_cycle2, colors)
 
