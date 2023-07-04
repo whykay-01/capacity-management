@@ -8,3 +8,4 @@ virtual-assistant/langchain/
 virtual-assistant/.langchain.db
 virtual-assistant/logs/
 virtual-assistant/langflow.db
+loaning-system/app/__pycache__
