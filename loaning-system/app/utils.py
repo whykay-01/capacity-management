@@ -49,7 +49,7 @@ def fill_dict_user_equipment(dataframe, user_cycle_df, user_type):
                 equipment_usertype_dict["User Type"].append("Other")
                 equipment_usertype_dict["Count"].append(1)
 
-    return equipment_usertype_dict
+    return pd.DataFrame(data=equipment_usertype_dict)
 
 
 def load_dataframes():
@@ -69,7 +69,6 @@ def load_dataframes():
     equipment_cycle_df = pd.read_csv(equipment_cycle_csv_path).sort_values(by="Equipment", ascending=False)
 
     return [user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df]
-
 
 
 def generate_top_5_bar_chart(final_df):
@@ -185,3 +184,134 @@ def update_graph_layouts(fig_pie,
     )
 
     return
+
+
+def generate_equipment_cycle_dict_daily(equipment_cycle_df):
+    """
+    this function is used to generate the equipment cycle dictionary for the daily cycle bar chart
+    :param equipment_cycle_df: dataframe of the equipment cycle
+    :return: equipment cycle dictionary
+    """
+    equipment_cycle_dict = {"Time": [], "Cycles": [], "Equipment": []}
+    
+    for i in range(len(equipment_cycle_df["Equipment"])):
+        
+        check_out_time_list = equipment_cycle_df["Check Out Times"][i].split(", ")
+        
+        for j in check_out_time_list:
+            
+            try:
+                index = equipment_cycle_dict["Time"].index(j, len(equipment_cycle_dict["Time"]) - 1)
+                
+                if (equipment_cycle_dict["Equipment"][index]!= equipment_cycle_df["Equipment"][i]):
+
+                    equipment_cycle_dict["Time"].append(j)
+                    count = 0
+                    for k in range(int(equipment_cycle_df["Cycles"][i])):
+                        if check_out_time_list[k] == j:
+                            count += 1
+                    equipment_cycle_dict["Cycles"].append(count)
+                    equipment_cycle_dict["Equipment"].append(
+                        equipment_cycle_df["Equipment"][i]
+                    )
+            
+            except ValueError:
+                
+                equipment_cycle_dict["Time"].append(j)
+                count = 0
+                
+                for k in range(int(equipment_cycle_df["Cycles"][i])):
+                    test = check_out_time_list[k]
+                    
+                    if test == j:
+                        count += 1
+
+                equipment_cycle_dict["Cycles"].append(count)
+                equipment_cycle_dict["Equipment"].append(equipment_cycle_df["Equipment"][i])
+    
+    return equipment_cycle_dict
+
+
+def generate_time_series(equipment_cycle_df):
+    """
+    this function is generating the time series for the equipment cycles
+    :param equipment_cycle_df: dataframe with equipment cycles
+    :return: time series
+    """
+    time_list = []
+    
+    for i in range(len(equipment_cycle_df["Equipment"])):
+        
+        check_out_time_list = equipment_cycle_df["Check Out Times"][i].split(", ")
+        # check_out_list = ['01/09/2021', '01/09/2021', '01/09/2021', ...]
+        
+        for check_out_time in check_out_time_list:
+            
+            if check_out_time not in time_list:
+                
+                if len(time_list) == 0:
+                    time_list.append(check_out_time)
+                
+                else:
+                    added = False
+                    for j in range(len(time_list) - 1, -1, -1):
+                        
+                        if (
+                            pd.to_datetime(
+                                time_list[j], dayfirst=True, format="%d/%m/%Y"
+                            ).isoformat()[0:10]
+                            < pd.to_datetime(
+                                check_out_time, dayfirst=True, format="%d/%m/%Y"
+                            ).isoformat()[0:10]
+                        ):
+                            time_list.insert(j + 1, check_out_time)
+                            added = True
+                            break
+
+                    if not added:
+                        time_list.insert(0, check_out_time)
+    
+    return time_list
+
+
+def generate_equipment_cycle_dict_monthly(equipment_cycle_df):
+    """
+    this function takes the equipment cycle dataframe and generates a dictionary of the equipment cycles
+    :param equipment_cycle_df: dataframe of the equipment cycles
+    :return: dictionary of the equipment cycles
+    """
+    equipment_cycle_dict2 = {"Time": [], "Cycles": [], "Equipment": []}
+    
+    for i in range(len(equipment_cycle_df["Equipment"])):
+        check_out_time_list = equipment_cycle_df["Check Out Times"][i].split(", ")
+        for j in check_out_time_list:
+            try:
+                index = equipment_cycle_dict2["Time"].index(
+                    j[3:10], len(equipment_cycle_dict2["Time"]) - 1
+                )
+                if (
+                    equipment_cycle_dict2["Equipment"][index]
+                    != equipment_cycle_df["Equipment"][i]
+                ):
+                    equipment_cycle_dict2["Time"].append(j[3:10])
+                    count = 0
+                    for k in range(int(equipment_cycle_df["Cycles"][i])):
+                        if check_out_time_list[k] == j[3:10]:
+                            count += 1
+                    equipment_cycle_dict2["Cycles"].append(count)
+                    equipment_cycle_dict2["Equipment"].append(
+                        equipment_cycle_df["Equipment"][i]
+                    )
+            except ValueError:
+                equipment_cycle_dict2["Time"].append(j[3:10])
+                count = 0
+                for k in range(int(equipment_cycle_df["Cycles"][i])):
+                    test = check_out_time_list[k][3:10]
+                    if test == j[3:10]:
+                        count += 1
+                equipment_cycle_dict2["Cycles"].append(count)
+                equipment_cycle_dict2["Equipment"].append(
+                    equipment_cycle_df["Equipment"][i]
+                )
+    
+    return equipment_cycle_dict2
