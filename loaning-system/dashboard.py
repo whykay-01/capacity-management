@@ -5,7 +5,11 @@ import plotly.graph_objects as go
 import os
 from dash.dependencies import Input, Output, State
 
-from app.utils import fill_dict_user_equipment, load_dataframes
+from app.utils import (fill_dict_user_equipment, 
+                       load_dataframes, 
+                       top5_used_equipment, 
+                       least5_used_equipment,
+                       generate_top_5_bar_chart)
 
 app = Dash(__name__)
 

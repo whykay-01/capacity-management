@@ -1,6 +1,7 @@
 import os
-
+import plotly.express as px
 import pandas as pd
+import plotly.graph_objects as go
 
 
 def fill_dict_user_equipment(dataframe, user_cycle_df, user_type):
@@ -125,12 +126,15 @@ def generate_top_5_bar_chart(final_df):
     return fig_top_5_bar
 
 
+
 def top5_used_equipment(equipment_usertype_df):
     """
     this function returns the top 5 used equipment given the dataframe with user types and the equipment they use
     """
     intermediate_val = equipment_usertype_df.groupby(["Equipment"]).size().to_frame().sort_values([0], ascending=False).head(5).reset_index()
     return equipment_usertype_df.merge(intermediate_val)
+
+
 
 def least5_used_equipment(equipment_usertype_df):
     """
