@@ -158,14 +158,14 @@ def dashboard():
 
     # creating the graphs from the dataframes -------------------------------------------------------------------------
     # pie chart 3668
-    fig_pie_total = user_cycle_df.groupby("User Type").sum()
+    fig_pie_total = user_cycle_df.groupby("User Type").sum(numeric_only=True)
     fig_pie = px.pie(user_cycle_df, "User Type", "Cycles")
     fig_pie.update_layout(
         title_text="Total Cycles: " + str(fig_pie_total["Cycles"].sum())
     )
 
     # top 5 bar graph
-    fig_top_5_bar_total = final_top_df.groupby("Equipment").sum()
+    fig_top_5_bar_total = final_top_df.groupby("Equipment").sum(numeric_only=True)
     fig_top_5_bar = px.histogram(
         final_top_df,
         x="Equipment",
@@ -194,7 +194,7 @@ def dashboard():
     fig_top_5_bar.update_xaxes(categoryorder="total descending")
 
     # least 5 bar graph
-    fig_least_5_bar_total = final_bottom_df.groupby("Equipment").sum()
+    fig_least_5_bar_total = final_bottom_df.groupby("Equipment").sum(numeric_only=True)
     fig_least_5_bar = px.histogram(
         final_bottom_df,
         x="Equipment",
@@ -223,7 +223,7 @@ def dashboard():
     )
 
     # non-unique equipment bar graph
-    non_unique_equipment_bar_total = non_unique_final_df.groupby("Equipment").sum()
+    non_unique_equipment_bar_total = non_unique_final_df.groupby("Equipment").sum(numeric_only=True)
     fig_non_unique_equipment_bar = px.histogram(
         non_unique_final_df,
         x="Equipment",
@@ -253,7 +253,7 @@ def dashboard():
 
     # daily check out graph
     fig_daily_timeline_df = pd.DataFrame(equipment_cycle_dict)
-    fig_daily_timeline_total = fig_daily_timeline_df.groupby("Time").sum()
+    fig_daily_timeline_total = fig_daily_timeline_df.groupby("Time").sum(numeric_only=True)
     fig_time_cycle = px.histogram(
         equipment_cycle_dict,
         x="Time",
@@ -277,7 +277,7 @@ def dashboard():
 
     # monthly check out graph
     fig_monthly_timeline_df = pd.DataFrame(equipment_cycle_dict2)
-    fig_monthly_timeline_total = fig_monthly_timeline_df.groupby("Time").sum()
+    fig_monthly_timeline_total = fig_monthly_timeline_df.groupby("Time").sum(numeric_only=True)
     fig_time_cycle2 = px.histogram(
         equipment_cycle_dict2,
         x="Time",
