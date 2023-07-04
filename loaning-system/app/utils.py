@@ -128,3 +128,60 @@ def least5_used_equipment(equipment_usertype_df):
     intermediate_val = equipment_usertype_df.groupby(["Equipment"]).size().to_frame().sort_values([0], ascending=True).head(5).reset_index()
     return equipment_usertype_df.merge(intermediate_val).sort_values(by=0).reset_index()
 
+
+def update_graph_layouts(fig_pie, 
+                         fig_top_5_bar, 
+                         fig_least_5_bar, 
+                         fig_non_unique_equipment_bar, 
+                         fig_time_cycle, 
+                         fig_time_cycle2,
+                         colors =  {"background": "#ADD8E6", "text": "#111111"}):
+    
+    """
+    this function takes the plotly figures and updates the layout for them
+    :param fig_pie: plotly figure of the pie chart
+    :param fig_top_5_bar: plotly figure of the top 5 bar chart
+    :param fig_least_5_bar: plotly figure of the least 5 bar chart
+    :param fig_non_unique_equipment_bar: plotly figure of the non unique user equipment bar chart
+    :param fig_time_cycle: plotly figure of the time cycle bar chart
+    :param fig_time_cycle2: plotly figure of the time cycle bar chart
+    :return: None
+    """
+    
+    fig_pie.update_layout(
+        plot_bgcolor=colors["background"],
+        paper_bgcolor=colors["background"],
+        font_color=colors["text"],
+    )
+
+    fig_top_5_bar.update_layout(
+        plot_bgcolor=colors["background"],
+        paper_bgcolor=colors["background"],
+        font_color=colors["text"],
+    )
+
+    fig_least_5_bar.update_layout(
+        plot_bgcolor=colors["background"],
+        paper_bgcolor=colors["background"],
+        font_color=colors["text"],
+    )
+
+    fig_non_unique_equipment_bar.update_layout(
+        plot_bgcolor=colors["background"],
+        paper_bgcolor=colors["background"],
+        font_color=colors["text"],
+    )
+
+    fig_time_cycle.update_layout(
+        plot_bgcolor=colors["background"],
+        paper_bgcolor=colors["background"],
+        font_color=colors["text"],
+    )
+
+    fig_time_cycle2.update_layout(
+        plot_bgcolor=colors["background"],
+        paper_bgcolor=colors["background"],
+        font_color=colors["text"],
+    )
+
+    return

@@ -9,38 +9,20 @@ from app.utils import (fill_dict_user_equipment,
                        load_dataframes, 
                        top5_used_equipment, 
                        least5_used_equipment,
-                       generate_top_5_bar_chart)
+                       generate_top_5_bar_chart,
+                       update_graph_layouts)
 
 app = Dash(__name__)
 
 
 def dashboard():
-    colors = {"background": "#ADD8E6", "text": "#111111"}
 
     # loading the dataframes
     user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df = load_dataframes()
-
-    # creating a dictionary for unique use equipment
-    equipment_usertype_dict = fill_dict_user_equipment(
-        unique_user_equipment_df, user_cycle_df, "Unique Users"
-    )
-
-    # turning dictionary back into a dataframe and then sorting it (for top 5 and least 5)
-    equipment_usertype_df = pd.DataFrame(data=equipment_usertype_dict)
     
-    # calculating top 5 and least 5 equipment used
-    final_top_df = top5_used_equipment(equipment_usertype_df)
-    final_bottom_df = least5_used_equipment(equipment_usertype_df)
-
-    # creating a dictionary for non-unique use equipment
-    non_unique_equipment_usertype_dict = fill_dict_user_equipment(
-        non_unique_user_equipment_df, user_cycle_df, "Users"
-    )
-
     # turning the dictionary back into a dataframe and then sorting it (for non-unique use equipment)
-    non_unique_equipment_usertype_df = pd.DataFrame(
-        data=non_unique_equipment_usertype_dict
-    )
+    non_unique_equipment_usertype_df = fill_dict_user_equipment(non_unique_user_equipment_df, user_cycle_df, "Users")
+    
     dfg = (
         non_unique_equipment_usertype_df.groupby(["Equipment"])
         .size()
@@ -144,6 +126,18 @@ def dashboard():
                     equipment_cycle_df["Equipment"][i]
                 )
 
+    # turning dictionary back into a dataframe and then sorting it
+    equipment_usertype_df = fill_dict_user_equipment(unique_user_equipment_df, user_cycle_df, "Unique Users")
+
+    # calculating top 5 and least 5 equipment used: DATAFRAMES
+    final_top_df = top5_used_equipment(equipment_usertype_df)
+    final_bottom_df = least5_used_equipment(equipment_usertype_df)
+
+    # top 5 and least 5 bar graph: GRAPHS
+    fig_top_5_bar = generate_top_5_bar_chart(final_top_df)
+    fig_least_5_bar = generate_top_5_bar_chart(final_bottom_df)
+
+
     # creating the graphs from the dataframes -------------------------------------------------------------------------
     # pie chart 3668
     fig_pie_total = user_cycle_df.groupby("User Type").sum(numeric_only=True)
@@ -152,11 +146,7 @@ def dashboard():
         title_text="Total Cycles: " + str(fig_pie_total["Cycles"].sum())
     )
 
-    # top 5 bar graph
-    fig_top_5_bar = generate_top_5_bar_chart(final_top_df)
-
-    # least 5 bar graph
-    fig_least_5_bar = generate_top_5_bar_chart(final_bottom_df)
+    
     
     
     # non-unique equipment bar graph
@@ -236,41 +226,8 @@ def dashboard():
     )
 
     # graph layouts ---------------------------------------------------------------------------------------------------
-    fig_pie.update_layout(
-        plot_bgcolor=colors["background"],
-        paper_bgcolor=colors["background"],
-        font_color=colors["text"],
-    )
-
-    fig_top_5_bar.update_layout(
-        plot_bgcolor=colors["background"],
-        paper_bgcolor=colors["background"],
-        font_color=colors["text"],
-    )
-
-    fig_least_5_bar.update_layout(
-        plot_bgcolor=colors["background"],
-        paper_bgcolor=colors["background"],
-        font_color=colors["text"],
-    )
-
-    fig_non_unique_equipment_bar.update_layout(
-        plot_bgcolor=colors["background"],
-        paper_bgcolor=colors["background"],
-        font_color=colors["text"],
-    )
-
-    fig_time_cycle.update_layout(
-        plot_bgcolor=colors["background"],
-        paper_bgcolor=colors["background"],
-        font_color=colors["text"],
-    )
-
-    fig_time_cycle2.update_layout(
-        plot_bgcolor=colors["background"],
-        paper_bgcolor=colors["background"],
-        font_color=colors["text"],
-    )
+    colors = {"background": "#ADD8E6", "text": "#111111"}
+    update_graph_layouts(fig_pie, fig_top_5_bar, fig_least_5_bar, fig_non_unique_equipment_bar, fig_time_cycle, fig_time_cycle2, colors)
 
     # webpage layout
     app.layout = html.Div(
