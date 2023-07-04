@@ -52,9 +52,17 @@ def fill_dict_user_equipment(dataframe, user_cycle_df, user_type):
     return pd.DataFrame(data=equipment_usertype_dict)
 
 
-def load_dataframes():
-    # Get the mountpoint of the volume inside the container
-    volume_mountpoint = "/data"
+def load_dataframes(volume_mountpoint = '/data'):
+    """
+    this function loads the dataframes from the csv files
+    :param volume_mountpoint: the path to the volume mountpoint (OPTIONAL)
+    :return: list of loaded pandas dataframes
+    """
+    
+    # TODO: Change this to the correct path
+    # volume_mountpoint = "/data"
+    volume_mountpoint = os.getcwd() + '/data'
+
 
     # Set the path to the CSV files relative to the volume mountpoint
     user_cycle_csv_path = os.path.join(volume_mountpoint, "user_cycle.csv")
@@ -69,63 +77,6 @@ def load_dataframes():
     equipment_cycle_df = pd.read_csv(equipment_cycle_csv_path).sort_values(by="Equipment", ascending=False)
 
     return [user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df]
-
-
-def generate_top_5_bar_chart(final_df):
-    """
-    this function takes the final dataframe and generates the top 5 bar chart (most or least used equipment)
-    :param final_df: dataframe of the final data
-    :return: plotly figure of the top 5 bar chart
-    """
-    fig_top_5_bar = px.histogram(
-        final_df,
-        x="Equipment",
-        y="Count",
-        color="User Type",
-        color_discrete_map={
-            "Student": px.colors.qualitative.Plotly[0],
-            "Staff": px.colors.qualitative.Plotly[1],
-            "Other": px.colors.qualitative.Plotly[3],
-            "Faculty": px.colors.qualitative.Plotly[2],
-            "IT": px.colors.qualitative.Plotly[4],
-        }
-    )
-
-    fig_top_5_bar_total = final_df.groupby("Equipment").sum(numeric_only=True)
-
-    # label for total number of cycles
-    fig_top_5_bar.add_trace(
-        go.Scatter(
-            x=fig_top_5_bar_total.index,
-            y=fig_top_5_bar_total["Count"],
-            text=fig_top_5_bar_total["Count"],
-            mode="text",
-            textposition="top center",
-            textfont=dict(size=14),
-            showlegend=False,
-        )
-    )
-    fig_top_5_bar.update_xaxes(categoryorder="total descending")
-
-    return fig_top_5_bar
-
-
-
-def top5_used_equipment(equipment_usertype_df):
-    """
-    this function returns the top 5 used equipment given the dataframe with user types and the equipment they use
-    """
-    intermediate_val = equipment_usertype_df.groupby(["Equipment"]).size().to_frame().sort_values([0], ascending=False).head(5).reset_index()
-    return equipment_usertype_df.merge(intermediate_val)
-
-
-
-def least5_used_equipment(equipment_usertype_df):
-    """
-    this function returns the least 5 used equipment given the dataframe with user types and the equipment they use
-    """
-    intermediate_val = equipment_usertype_df.groupby(["Equipment"]).size().to_frame().sort_values([0], ascending=True).head(5).reset_index()
-    return equipment_usertype_df.merge(intermediate_val).sort_values(by=0).reset_index()
 
 
 def update_graph_layouts(fig_pie, 
@@ -315,3 +266,116 @@ def generate_equipment_cycle_dict_monthly(equipment_cycle_df):
                 )
     
     return equipment_cycle_dict2
+
+
+def generate_non_unique_user_df(non_unique_user_equipment_df, user_cycle_df):
+    
+    # turning the dictionary back into a dataframe and then sorting it (for non-unique use equipment)
+    non_unique_equipment_usertype_df = fill_dict_user_equipment(non_unique_user_equipment_df, user_cycle_df, "Users")
+    
+    dfg = (
+        non_unique_equipment_usertype_df.groupby(["Equipment"])
+        .size()
+        .to_frame()
+        .sort_values([0], ascending=False)
+        .reset_index()
+    )
+    non_unique_final_df = non_unique_equipment_usertype_df.merge(dfg)
+    
+    return non_unique_final_df
+
+
+def generate_non_unique_user_equipment_bar(non_unique_final_df):
+    # non-unique equipment bar graph
+    non_unique_equipment_bar_total = non_unique_final_df.groupby("Equipment").sum(numeric_only=True)
+    fig_non_unique_equipment_bar = px.histogram(
+        non_unique_final_df,
+        x="Equipment",
+        y="Count",
+        color="User Type",
+        color_discrete_map={
+            "Student": px.colors.qualitative.Plotly[0],
+            "Staff": px.colors.qualitative.Plotly[1],
+            "Others": px.colors.qualitative.Plotly[3],
+            "Faculty": px.colors.qualitative.Plotly[2],
+            "IT": px.colors.qualitative.Plotly[4],
+        },
+    )
+    # label for total numer of cycles
+    fig_non_unique_equipment_bar.add_trace(
+        go.Scatter(
+            x=non_unique_equipment_bar_total.index,
+            y=non_unique_equipment_bar_total["Count"],
+            text=non_unique_equipment_bar_total["Count"],
+            mode="text",
+            textposition="top center",
+            textfont=dict(size=14),
+            showlegend=False,
+        )
+    )
+    fig_non_unique_equipment_bar.update_xaxes(categoryorder="total descending")
+
+    return fig_non_unique_equipment_bar
+
+
+def generate_fig_time_cycle(equipment_cycle_df):
+    # creating a dictionary for daily timeline because the equipment cycle dataframe isn't in the correct format
+    equipment_cycle_dict_daily = generate_equipment_cycle_dict_daily(equipment_cycle_df)
+
+    # daily check out graph
+    fig_daily_timeline_df = pd.DataFrame(equipment_cycle_dict_daily)
+    fig_daily_timeline_total = fig_daily_timeline_df.groupby("Time").sum(numeric_only=True)
+    fig_time_cycle = px.histogram(
+        equipment_cycle_dict_daily,
+        x="Time",
+        y="Cycles",
+        color="Equipment",
+        color_discrete_sequence=px.colors.qualitative.Bold,
+    )
+    # label for total number of cycles
+    fig_time_cycle.add_trace(
+        go.Scatter(
+            x=fig_daily_timeline_total.index,
+            y=fig_daily_timeline_total["Cycles"],
+            text=fig_daily_timeline_total["Cycles"],
+            mode="text",
+            textposition="top center",
+            textfont=dict(size=11),
+            showlegend=False,
+        )
+    )
+    time_series = generate_time_series(equipment_cycle_df)
+    fig_time_cycle.update_xaxes(categoryorder="array", categoryarray=time_series)
+
+    return fig_time_cycle
+
+
+
+def generate_fig_time_cycle_month(equipment_cycle_df):
+    
+    # creating a dictionary for monthly timeline because the equipment cycle dataframe isn't in the correct format
+    equipment_cycle_dict_monthly = generate_equipment_cycle_dict_monthly(equipment_cycle_df)
+
+    fig_monthly_timeline_df = pd.DataFrame(equipment_cycle_dict_monthly)
+    fig_monthly_timeline_total = fig_monthly_timeline_df.groupby("Time").sum(numeric_only=True)
+    fig_time_cycle2 = px.histogram(
+        equipment_cycle_dict_monthly,
+        x="Time",
+        y="Cycles",
+        color="Equipment",
+        color_discrete_sequence=px.colors.qualitative.Bold,
+    )
+    # label for total number of cycles
+    fig_time_cycle2.add_trace(
+        go.Scatter(
+            x=fig_monthly_timeline_total.index,
+            y=fig_monthly_timeline_total["Cycles"],
+            text=fig_monthly_timeline_total["Cycles"],
+            mode="text",
+            textposition="top center",
+            textfont=dict(size=14),
+            showlegend=False,
+        )
+    )
+
+    return fig_time_cycle2

@@ -6,14 +6,23 @@ import os
 from dash.dependencies import Input, Output, State
 
 from app.utils import (fill_dict_user_equipment, 
-                       load_dataframes, 
-                       top5_used_equipment, 
-                       least5_used_equipment,
-                       generate_top_5_bar_chart,
+                       load_dataframes,
                        update_graph_layouts,
-                       generate_equipment_cycle_dict_daily,
-                       generate_time_series,
-                       generate_equipment_cycle_dict_monthly)
+                    #    generate_equipment_cycle_dict_daily,
+                    #    generate_time_series,
+                    #    generate_equipment_cycle_dict_monthly,
+                       generate_non_unique_user_df,
+                       generate_non_unique_user_equipment_bar,
+                       
+                       generate_fig_time_cycle,
+                       generate_fig_time_cycle_month)
+
+from app.top5_bar_charts import (top5_used_equipment, 
+                                 least5_used_equipment, 
+                                 generate_top_5_bar_chart)
+
+from app.pie_chart import generate_fig_pie
+
 
 app = Dash(__name__)
 
