@@ -6,7 +6,6 @@ This file is used to generate the Monthly Equipment Timeline Bar Graph, and it c
     
 """
 
-
 import json
 import plotly
 import plotly.express as px
