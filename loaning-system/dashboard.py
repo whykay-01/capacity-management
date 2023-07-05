@@ -5,23 +5,14 @@ import plotly.graph_objects as go
 import os
 from dash.dependencies import Input, Output, State
 
-from app.utils import (fill_dict_user_equipment, 
-                       load_dataframes,
+from app.utils import (load_dataframes, 
                        update_graph_layouts,
-                    #    generate_equipment_cycle_dict_daily,
-                    #    generate_time_series,
-                    #    generate_equipment_cycle_dict_monthly,
-                       generate_non_unique_user_df,
-                       generate_non_unique_user_equipment_bar,
-                       
-                       generate_fig_time_cycle,
-                       generate_fig_time_cycle_month)
-
-from app.top5_bar_charts import (top5_used_equipment, 
-                                 least5_used_equipment, 
-                                 generate_top_5_bar_chart)
-
-from app.pie_chart import generate_fig_pie
+                       fill_dict_user_equipment)
+from app.top5_bar_charts import (generate_top_5_bar_chart)
+from app.pie_chart import (generate_fig_pie)
+from app.daily_equipment_timeline import (generate_fig_time_cycle)
+from app.monthly_equipment_timeline import (generate_fig_time_cycle_month)
+from app.non_unique_user_usage import (generate_non_unique_user_equipment_bar)
 
 
 app = Dash(__name__)
@@ -35,24 +26,15 @@ def dashboard():
     # turning dictionary back into a dataframe and then sorting it
     equipment_usertype_df = fill_dict_user_equipment(unique_user_equipment_df, user_cycle_df, "Unique Users")
 
-    # calculating top 5 and least 5 equipment used: DATAFRAMES
-    final_top_df = top5_used_equipment(equipment_usertype_df)
-    final_bottom_df = least5_used_equipment(equipment_usertype_df)
-
-    # top 5 and least 5 bar graph: GRAPHS
-    fig_top_5_bar = generate_top_5_bar_chart(final_top_df)
-    fig_least_5_bar = generate_top_5_bar_chart(final_bottom_df)
-
-
-    # creating the graphs from the dataframes -------------------------------------------------------------------------
-    
     # pie chart: GRAPHS
     fig_pie = generate_fig_pie(user_cycle_df)
-
-    # non-unique equipment bar graph: DATAFRAMES
-    non_unique_final_df = generate_non_unique_user_df(non_unique_user_equipment_df, user_cycle_df)
+    
+    # top 5 and least 5 bar graph: GRAPHS
+    fig_top_5_bar = generate_top_5_bar_chart("Most Used", equipment_usertype_df)
+    fig_least_5_bar = generate_top_5_bar_chart("Least Used", equipment_usertype_df)
+    
     # non-unique equipment bar graph: GRAPHS
-    fig_non_unique_equipment_bar = generate_non_unique_user_equipment_bar(non_unique_final_df)
+    fig_non_unique_equipment_bar = generate_non_unique_user_equipment_bar(non_unique_user_equipment_df, user_cycle_df)
 
     # daily check out graph: GRAPHS
     fig_time_cycle = generate_fig_time_cycle(equipment_cycle_df)
