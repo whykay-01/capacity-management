@@ -7,6 +7,8 @@ This file is used to generate the Monthly Equipment Timeline Bar Graph, and it c
 """
 
 
+import json
+import plotly
 import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
@@ -82,5 +84,5 @@ def generate_fig_time_cycle_month(equipment_cycle_df):
             showlegend=False,
         )
     )
-
-    return fig_time_cycle2
+    fig_time_cycle_final = json.dumps(fig_time_cycle2, cls=plotly.utils.PlotlyJSONEncoder)
+    return fig_time_cycle_final

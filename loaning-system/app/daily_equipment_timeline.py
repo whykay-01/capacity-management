@@ -7,6 +7,8 @@ This file is used to generate the Daily Equipment Timeline Bar Graph, and it con
     
 """
 
+import json
+import plotly
 import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
@@ -130,4 +132,7 @@ def generate_fig_time_cycle(equipment_cycle_df):
     time_series = generate_time_series(equipment_cycle_df)
     fig_time_cycle.update_xaxes(categoryorder="array", categoryarray=time_series)
 
-    return fig_time_cycle
+    fig_time_cycle_final = json.dumps(fig_time_cycle, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return fig_time_cycle_final
+

@@ -1,3 +1,5 @@
+import json
+import plotly
 from app.utils import fill_dict_user_equipment
 import plotly.express as px
 import pandas as pd
@@ -62,5 +64,6 @@ def generate_non_unique_user_equipment_bar(non_unique_user_equipment_df, user_cy
         )
     )
     fig_non_unique_equipment_bar.update_xaxes(categoryorder="total descending")
+    fig_non_unique_equipment_bar_final = json.dumps(fig_non_unique_equipment_bar, cls=plotly.utils.PlotlyJSONEncoder)
 
-    return fig_non_unique_equipment_bar
+    return fig_non_unique_equipment_bar_final
