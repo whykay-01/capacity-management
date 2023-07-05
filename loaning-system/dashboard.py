@@ -2,6 +2,7 @@ import os
 from flask import (
     Flask,
     render_template,
+    request,
 )
 
 from app.utils import (load_dataframes, 
@@ -64,6 +65,19 @@ def index():
 @app.route("/upload-files")
 def upload_files():
     return render_template("upload-files.html")
+
+@app.route("/confirm-upload")
+def confirm_upload():
+
+    upload_files = []
+    upload_files.append(request.files['equipment_cycle'])
+    upload_files.append(request.files['non_unique_user_equipment'])
+    upload_files.append(request.files['test'])
+    upload_files.append(request.files['unique_user_equipment'])
+    upload_files.append(request.files['user_cycle'])
+
+    return render_template("confirm-upload.html", uploaded_files=upload_files)
+
 
 if __name__ == "__main__":
 	app.run('127.0.0.1', 5000, debug = True)
