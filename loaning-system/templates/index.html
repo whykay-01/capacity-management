@@ -46,12 +46,18 @@
 </head>
 
 <body>
-  <div class="container">
-    <h1>Loaning Dashboard</h1>
-    <h4>Add new CSV files to the system:</h4>
-    <div id="upload-data" class="upload-section">
-      Drag and Drop or <a href="#">Select Files</a>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Loaning Dashboard</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/upload-files">Upload New Files</a>
+        </li>
+      </ul>
     </div>
+  </nav>
+  <div class="container">
+    <br>
     <div class="graph-section">
       <h3>Non-Unique User Pie Chart</h3>
       <div id="pie-graph"></div>
