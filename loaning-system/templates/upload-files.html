@@ -1,104 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Files</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background-color: #ffffff;
+        color: #000000;
+      }
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upload Files</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    body {
-      background-color: #ffffff;
-      color: #000000;
-    }
+      .container {
+        margin-top: 50px;
+      }
 
-    .container {
-      margin-top: 50px;
-    }
+      h1 {
+        text-align: center;
+        color: #000000;
+      }
 
-    h1 {
-      text-align: center;
-      color: #000000;
-    }
+      .file-upload-section {
+        text-align: center;
+        margin: 20px auto;
+      }
 
-    .file-upload-section {
-      text-align: center;
-      margin: 20px auto;
-    }
+      .file-upload-section h4 {
+        margin-bottom: 20px;
+      }
 
-    .file-upload-section h4 {
-      margin-bottom: 20px;
-    }
+      .file-input {
+        display: none;
+      }
 
-    .file-input {
-      display: none;
-    }
+      .custom-file-upload {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #ffffff;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
 
-    .custom-file-upload {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #ffffff;
-      cursor: pointer;
-      border-radius: 5px;
-    }
+      .uploaded-files-list {
+        margin-top: 30px;
+      }
+    </style>
+  </head>
 
-    .uploaded-files-list {
-      margin-top: 30px;
-    }
-  </style>
-</head>
-
-<body>
+  <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="/">Loaning Dashboard</a>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="#">Upload New Files</a>
-            </li>
-            </ul>
-        </div>
+      <a class="navbar-brand" href="/">Loaning Dashboard</a>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Upload New Files</a>
+          </li>
+        </ul>
+      </div>
     </nav>
-  <div class="container">
-    <h1>Upload Files</h1>
-    <div class="file-upload-section">
-      <h4>Upload Five Different Files:</h4>
-      <input type="file" class="file-input" id="file1" accept=".csv" required>
-      <label for="file1" class="custom-file-upload">Choose File 1</label>
+    <div class="container">
+      <h1>Upload Files</h1>
+      <div class="file-upload-section">
+        <h4>Upload Five Different Files:</h4>
+        <div class="form-group">
+          <label for="file1" class="custom-file-upload"
+            >Please upload equipment_cycle.csv</label
+          >
+          <input
+            type="file"
+            class="file-input form-control"
+            id="file1"
+            accept=".csv"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="file2" class="custom-file-upload"
+            >Please upload non_unique_user_equipment.csv</label
+          >
+          <input
+            type="file"
+            class="file-input form-control"
+            id="file2"
+            accept=".csv"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="file3" class="custom-file-upload"
+            >Please upload test.csv</label
+          >
+          <input
+            type="file"
+            class="file-input form-control"
+            id="file3"
+            accept=".csv"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="file4" class="custom-file-upload"
+            >Please upload unique_user_equipment.csv</label
+          >
+          <input
+            type="file"
+            class="file-input form-control"
+            id="file4"
+            accept=".csv"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="file5" class="custom-file-upload"
+            >Please upload user_cycle.csv</label
+          >
+          <input
+            type="file"
+            class="file-input form-control"
+            id="file5"
+            accept=".csv"
+            required
+          />
+        </div>
+      </div>
 
-      <input type="file" class="file-input" id="file2" accept=".csv" required>
-      <label for="file2" class="custom-file-upload">Choose File 2</label>
-
-      <input type="file" class="file-input" id="file3" accept=".csv" required>
-      <label for="file3" class="custom-file-upload">Choose File 3</label>
-
-      <input type="file" class="file-input" id="file4" accept=".csv" required>
-      <label for="file4" class="custom-file-upload">Choose File 4</label>
-
-      <input type="file" class="file-input" id="file5" accept=".csv" required>
-      <label for="file5" class="custom-file-upload">Choose File 5</label>
+      <div class="uploaded-files-list">
+        <h4>Uploaded Files:</h4>
+        <ul id="uploaded-files"></ul>
+      </div>
     </div>
 
-    <div class="uploaded-files-list">
-      <h4>Uploaded Files:</h4>
-      <ul id="uploaded-files"></ul>
-    </div>
-  </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        var expectedFileNames = [
+          "equipment_cycle.csv",
+          "non_unique_user_equipment.csv",
+          "test.csv",
+          "unique_user_equipment.csv",
+          "user_cycle.csv",
+        ];
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    $(document).ready(function () {
-      $(".file-input").change(function () {
-        var fileNames = "";
-        var files = this.files;
-        for (var i = 0; i < files.length; i++) {
-          fileNames += "<li>" + files[i].name + "</li>";
+        $(".file-input").change(function () {
+          var fileNames = [];
+          var files = this.files;
+
+          // Check if the number of uploaded files is exactly five
+          if (files.length !== expectedFileNames.length) {
+            alert(
+              "Please upload exactly " + expectedFileNames.length + " files."
+            );
+            // Clear the file input
+            $(this).val("");
+            return;
+          }
+
+          // Check the name of each uploaded file
+          for (var i = 0; i < files.length; i++) {
+            var fileName = files[i].name;
+            fileNames.push(fileName);
+
+            // Perform the validation against the expected file names
+            if (!isValidFileName(fileName, expectedFileNames[i])) {
+              alert("Invalid file name: " + fileName);
+              // Clear the file input
+              $(this).val("");
+              return;
+            }
+          }
+
+          // Display the names of the uploaded files
+          var fileList = "<ul>";
+          for (var j = 0; j < fileNames.length; j++) {
+            fileList += "<li>" + fileNames[j] + "</li>";
+          }
+          fileList += "</ul>";
+
+          $("#uploaded-files").html(fileList);
+        });
+
+        // Custom validation function for file names
+        function isValidFileName(actualFileName, expectedFileName) {
+          // Compare the actual file name with the expected file name
+          return actualFileName === expectedFileName;
         }
-        $("#uploaded-files").html(fileNames);
       });
-    });
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>

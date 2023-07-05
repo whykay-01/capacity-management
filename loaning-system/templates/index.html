@@ -1,111 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loaning Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background-color: #ffffff;
+        color: #000000;
+      }
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loaning Dashboard</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    body {
-      background-color: #ffffff;
-      color: #000000;
-    }
+      .container {
+        margin-top: 50px;
+      }
 
-    .container {
-      margin-top: 50px;
-    }
+      h1 {
+        text-align: center;
+        color: #000000;
+      }
 
-    h1 {
-      text-align: center;
-      color: #000000;
-    }
+      h4 {
+        text-align: left;
+        color: #000000;
+      }
 
-    h4 {
-      text-align: left;
-      color: #000000;
-    }
+      .upload-section {
+        width: 50%;
+        height: 60px;
+        line-height: 60px;
+        border-width: 2px;
+        border-style: dashed;
+        border-radius: 5px;
+        text-align: left;
+        margin: 10px;
+      }
 
-    .upload-section {
-      width: 50%;
-      height: 60px;
-      line-height: 60px;
-      border-width: 2px;
-      border-style: dashed;
-      border-radius: 5px;
-      text-align: left;
-      margin: 10px;
-    }
+      .graph-section {
+        margin-top: 50px;
+        text-align: center;
+        color: #000000;
+      }
+    </style>
+  </head>
 
-    .graph-section {
-      margin-top: 50px;
-      text-align: center;
-      color: #000000;
-    }
-  </style>
-</head>
-
-<body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">Loaning Dashboard</a>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/upload-files">Upload New Files</a>
-        </li>
-      </ul>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <a class="navbar-brand" href="#">Loaning Dashboard</a>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/upload-files">Upload New Files</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <br />
+      <div class="graph-section">
+        <h3>Non-Unique User Pie Chart</h3>
+        <div id="pie-graph"></div>
+      </div>
+      <div class="graph-section">
+        <h3>5 Most Used Equipment (Unique)</h3>
+        <div id="top-5-graph"></div>
+      </div>
+      <div class="graph-section">
+        <h3>5 Least Used Equipment (Unique)</h3>
+        <div id="least-5-graph"></div>
+      </div>
+      <div class="graph-section">
+        <h3>Used Equipment by non-unique Users</h3>
+        <div id="repetitive-loans"></div>
+      </div>
+      <div class="graph-section">
+        <h3>Daily Equipment Timeline</h3>
+        <div id="daily-loanings-graph"></div>
+      </div>
+      <div class="graph-section">
+        <h3>Monthly Equipment Timeline</h3>
+        <div id="monthly-loanings-graph"></div>
+      </div>
     </div>
-  </nav>
-  <div class="container">
-    <br>
-    <div class="graph-section">
-      <h3>Non-Unique User Pie Chart</h3>
-      <div id="pie-graph"></div>
-    </div>
-    <div class="graph-section">
-      <h3>5 Most Used Equipment (Unique)</h3>
-      <div id="top-5-graph"></div>
-    </div>
-    <div class="graph-section">
-      <h3>5 Least Used Equipment (Unique)</h3>
-      <div id="least-5-graph"></div>
-    </div>
-    <div class="graph-section">
-      <h3>Used Equipment by non-unique Users</h3>
-      <div id="repetitive-loans"></div>
-    </div>
-    <div class="graph-section">
-      <h3>Daily Equipment Timeline</h3>
-      <div id="daily-loanings-graph"></div>
-    </div>
-    <div class="graph-section">
-      <h3>Monthly Equipment Timeline</h3>
-      <div id="monthly-loanings-graph"></div>
-    </div>
-  </div>
 
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="text/javascript">
-        var graphs1 = {{ figures["Non-Unique User Pie Chart"] | safe}};
-        Plotly.plot("pie-graph", graphs1,{});
+      var graphs1 = {{ figures["Non-Unique User Pie Chart"] | safe}};
+      Plotly.plot("pie-graph", graphs1,{});
 
-        var graphs2 = {{ figures["5 Most Used Equipment (Unique)"] | safe}};
-        Plotly.plot("top-5-graph", graphs2,{});
+      var graphs2 = {{ figures["5 Most Used Equipment (Unique)"] | safe}};
+      Plotly.plot("top-5-graph", graphs2,{});
 
-        var graphs3 = {{ figures["5 Least Used Equipment (Unique)"] | safe}};
-        Plotly.plot("least-5-graph", graphs3,{});
+      var graphs3 = {{ figures["5 Least Used Equipment (Unique)"] | safe}};
+      Plotly.plot("least-5-graph", graphs3,{});
 
-        var graphs4 = {{ figures["Used Equipment by non-unique Users"] | safe}};
-        Plotly.plot("repetitive-loans", graphs4,{});
+      var graphs4 = {{ figures["Used Equipment by non-unique Users"] | safe}};
+      Plotly.plot("repetitive-loans", graphs4,{});
 
-        var graphs5 = {{ figures["Daily Equipment Timeline"] | safe}};
-        Plotly.plot("daily-loanings-graph", graphs5,{});
+      var graphs5 = {{ figures["Daily Equipment Timeline"] | safe}};
+      Plotly.plot("daily-loanings-graph", graphs5,{});
 
-        var graphs6 = {{ figures["Monthly Equipment Timeline"] | safe}};
-        Plotly.plot("monthly-loanings-graph", graphs6,{});
+      var graphs6 = {{ figures["Monthly Equipment Timeline"] | safe}};
+      Plotly.plot("monthly-loanings-graph", graphs6,{});
     </script>
-</body>
-
+  </body>
 </html>
-
-
