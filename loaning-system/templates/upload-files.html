@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Upload Files</title>
+    <title>Upload File Form</title>
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -23,50 +23,20 @@
         color: #000000;
       }
 
-      .file-upload-section {
-        text-align: center;
-        margin: 20px auto;
-      }
-
-      .file-upload-section h4 {
-        margin-bottom: 20px;
-      }
-
-      .file-input {
-        display: none;
-      }
-
-      .custom-file-upload {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #ffffff;
-        cursor: pointer;
-        border-radius: 5px;
-        margin-bottom: 10px;
-      }
-
-      .uploaded-files-list {
-        margin-top: 30px;
+      .upload-btn {
+        margin-top: 20px;
       }
     </style>
   </head>
 
   <body>
-    {% with message = get_flashed_messages(category_filter=["success"]) %}
-        {% if message %}
-        <div class="alert alert-success">
-            {{message[0]}}
-        </div>
-        {% endif %}
-    {% endwith %}
-    {% with message = get_flashed_messages(category_filter=["error"]) %}
-        {% if message %}
-            <div class="alert alert-danger">
-                {{message[0]}}
-            </div>
-        {% endif %}
-    {% endwith %}
+    {% with message = get_flashed_messages(category_filter=["success"]) %} {% if
+    message %}
+    <div class="alert alert-success">{{message[0]}}</div>
+    {% endif %} {% endwith %} {% with message =
+    get_flashed_messages(category_filter=["error"]) %} {% if message %}
+    <div class="alert alert-danger">{{message[0]}}</div>
+    {% endif %} {% endwith %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <a class="navbar-brand" href="/">Loaning Dashboard</a>
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -78,132 +48,83 @@
       </div>
     </nav>
     <div class="container">
-      <h1>Upload Files</h1>
-      <div class="file-upload-section">
-        <h4>Upload Five Different Files:</h4>
+      <h1>Upload File Form</h1>
+      <form action="/confirm-upload" method="POST">
+        <hr class="hr hr-blurry" />
         <div class="form-group">
-          <label for="file1" class="custom-file-upload"
-            >Please upload equipment_cycle.csv</label
+          <label for="file-input1"
+            >Please upload file (equipment_cycle.csv):</label
           >
           <input
             type="file"
-            class="file-input form-control"
-            id="file1"
+            class="form-control-file"
+            id="file-input1"
             accept=".csv"
+            name="equipment_cycle"
             required
           />
         </div>
+        <hr class="hr hr-blurry" />
         <div class="form-group">
-          <label for="file2" class="custom-file-upload"
-            >Please upload non_unique_user_equipment.csv</label
+          <label for="file-input2"
+            >Please upload file (non_unique_user_equipment.csv):</label
           >
           <input
             type="file"
-            class="file-input form-control"
-            id="file2"
+            class="form-control-file"
+            id="file-input2"
             accept=".csv"
+            name="non_unique_user_equipment"
             required
           />
         </div>
+        <hr class="hr hr-blurry" />
         <div class="form-group">
-          <label for="file3" class="custom-file-upload"
-            >Please upload test.csv</label
+          <label for="file-input3">Please upload file (test.csv):</label>
+          <input
+            type="file"
+            class="form-control-file"
+            id="file-input3"
+            accept=".csv"
+            name="test"
+            required
+          />
+        </div>
+        <hr class="hr hr-blurry" />
+        <div class="form-group">
+          <label for="file-input4"
+            >Please upload file (unique_user_equipment.csv):</label
           >
           <input
             type="file"
-            class="file-input form-control"
-            id="file3"
+            class="form-control-file"
+            id="file-input4"
             accept=".csv"
+            name="unique_user_equipment"
             required
           />
         </div>
+        <hr class="hr hr-blurry" />
         <div class="form-group">
-          <label for="file4" class="custom-file-upload"
-            >Please upload unique_user_equipment.csv</label
-          >
+          <label for="file-input5">Please upload file (user_cycle.csv):</label>
           <input
             type="file"
-            class="file-input form-control"
-            id="file4"
+            class="form-control-file"
+            id="file-input5"
             accept=".csv"
+            name="user_cycle"
             required
           />
         </div>
-        <div class="form-group">
-          <label for="file5" class="custom-file-upload"
-            >Please upload user_cycle.csv</label
-          >
-          <input
-            type="file"
-            class="file-input form-control"
-            id="file5"
-            accept=".csv"
-            required
-          />
-        </div>
-      </div>
-
-      <div class="uploaded-files-list">
-        <h4>Uploaded Files:</h4>
-        <ul id="uploaded-files"></ul>
-      </div>
+        <hr class="hr hr-blurry" />
+        <button type="submit" class="btn btn-primary upload-btn">
+          Upload files
+        </button>
+      </form>
     </div>
+    <br />
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      $(document).ready(function () {
-        var expectedFileNames = [
-          "equipment_cycle.csv",
-          "non_unique_user_equipment.csv",
-          "test.csv",
-          "unique_user_equipment.csv",
-          "user_cycle.csv",
-        ];
-
-        $(".file-input").change(function () {
-          var fileNames = [];
-          var files = this.files;
-
-          // Check if the number of uploaded files is exactly five
-          if (files.length !== expectedFileNames.length) {
-            alert(
-              "Please upload exactly " + expectedFileNames.length + " files."
-            );
-            // Clear the file input
-            $(this).val("");
-            return;
-          }
-
-          // Check the name of each uploaded file
-          for (var i = 0; i < files.length; i++) {
-            var fileName = files[i].name;
-            fileNames.push(fileName);
-
-            // Perform the validation against the expected file names
-            if (!isValidFileName(fileName, expectedFileNames[i])) {
-              alert("Invalid file name: " + fileName);
-              // Clear the file input
-              $(this).val("");
-              return;
-            }
-          }
-
-          // Display the names of the uploaded files
-          var fileList = "<ul>";
-          for (var j = 0; j < fileNames.length; j++) {
-            fileList += "<li>" + fileNames[j] + "</li>";
-          }
-          fileList += "</ul>";
-
-          $("#uploaded-files").html(fileList);
-        });
-
-        // Custom validation function for file names
-        function isValidFileName(actualFileName, expectedFileName) {
-          // Compare the actual file name with the expected file name
-          return actualFileName === expectedFileName;
-        }
-      });
-    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </body>
 </html>
