@@ -27,12 +27,18 @@ def least5_used_equipment(equipment_usertype_df):
 
 
 
-def generate_top_5_bar_chart(final_df):
+def generate_top_5_bar_chart(graph_type, equipment_usertype_df):
     """
     this function takes the final dataframe and generates the top 5 bar chart (most or least used equipment)
     :param final_df: dataframe of the final data
     :return: plotly figure of the top 5 bar chart
     """
+    if graph_type == "Most Used":
+        final_df = top5_used_equipment(equipment_usertype_df)
+    
+    elif graph_type == "Least Used":
+        final_df = least5_used_equipment(equipment_usertype_df)
+
     fig_top_5_bar = px.histogram(
         final_df,
         x="Equipment",
