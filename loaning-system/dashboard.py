@@ -37,14 +37,17 @@ def dashboard():
     fig_non_unique_equipment_bar = generate_non_unique_user_equipment_bar(non_unique_user_equipment_df, user_cycle_df)
 
     # daily check out graph: GRAPHS
-    fig_time_cycle = generate_fig_time_cycle(equipment_cycle_df)
+    fig_time_daily = generate_fig_time_cycle(equipment_cycle_df)
 
     # monthly check out graph: GRAPHS
-    fig_time_cycle2 = generate_fig_time_cycle_month(equipment_cycle_df)
+    fig_time_monthly = generate_fig_time_cycle_month(equipment_cycle_df)
 
     # graph layouts and their background features
     colors = {"background": "#ADD8E6", "text": "#111111"}
-    update_graph_layouts(fig_pie, fig_top_5_bar, fig_least_5_bar, fig_non_unique_equipment_bar, fig_time_cycle, fig_time_cycle2, colors)
+
+    # setting the layout for the graphs
+    update_graph_layouts(fig_pie, fig_top_5_bar, fig_least_5_bar, fig_non_unique_equipment_bar, fig_time_daily, fig_time_monthly, colors)
+
 
     # webpage layout
     app.layout = html.Div(
@@ -99,12 +102,12 @@ def dashboard():
                 children="Daily Equipment Timeline",
                 style={"textAlign": "center", "color": colors["text"]},
             ),
-            dcc.Graph(id="-cycle-timeline-graph", figure=fig_time_cycle),
+            dcc.Graph(id="-cycle-timeline-graph", figure=fig_time_daily),
             html.H3(
                 children="Monthly Equipment Timeline",
                 style={"textAlign": "center", "color": colors["text"]},
             ),
-            dcc.Graph(id="monthly-timeline-graph", figure=fig_time_cycle2),
+            dcc.Graph(id="monthly-timeline-graph", figure=fig_time_monthly),
         ],
     )
 
