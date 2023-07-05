@@ -1,8 +1,3 @@
-from dash import Dash, html, dcc
-import plotly.express as px
-import pandas as pd
-import plotly.graph_objects as go
-# Using flask to host the app
 from flask import (
     Flask,
     render_template,
@@ -16,8 +11,6 @@ from app.daily_equipment_timeline import (generate_fig_time_cycle)
 from app.monthly_equipment_timeline import (generate_fig_time_cycle_month)
 from app.non_unique_user_usage import (generate_non_unique_user_equipment_bar)
 
-
-# app = Dash(__name__)
 
 app = Flask(__name__)
 
@@ -65,4 +58,3 @@ def index():
 
 if __name__ == "__main__":
 	app.run('127.0.0.1', 5000, debug = True)
-# app.run_server(host="0.0.0.0", port=8050, debug=True)
