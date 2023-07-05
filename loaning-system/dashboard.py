@@ -2,8 +2,16 @@ from dash import Dash, html, dcc
 import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
-import os
-from dash.dependencies import Input, Output, State
+# Using flask to host the app
+from flask import (
+    Flask,
+    flash,
+    render_template,
+    request,
+    url_for,
+    redirect,
+    Response,
+)
 
 from app.utils import (load_dataframes, 
                        update_graph_layouts,
@@ -15,11 +23,16 @@ from app.monthly_equipment_timeline import (generate_fig_time_cycle_month)
 from app.non_unique_user_usage import (generate_non_unique_user_equipment_bar)
 
 
-app = Dash(__name__)
+# app = Dash(__name__)
 
+app = Flask(__name__)
 
 def dashboard():
-
+    """
+    This function is the main function that calls functions which generate the dashboard
+    :param None
+    :return: dictionary of the graphs
+    """
     # loading the dataframes
     user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df = load_dataframes()
     
@@ -46,73 +59,86 @@ def dashboard():
     colors = {"background": "#ADD8E6", "text": "#111111"}
 
     # setting the layout for the graphs
-    update_graph_layouts(fig_pie, fig_top_5_bar, fig_least_5_bar, fig_non_unique_equipment_bar, fig_time_daily, fig_time_monthly, colors)
+    # update_graph_layouts(fig_pie, fig_top_5_bar, fig_least_5_bar, fig_non_unique_equipment_bar, fig_time_daily, fig_time_monthly, colors)
+
+    print("Dashboard has been generated")
+
+    return {"Non-Unique User Pie Chart": fig_pie,
+            "5 Most Used Equipment (Unique)": fig_top_5_bar,
+            "5 Least Used Equipment (Unique)": fig_least_5_bar,
+            "Used Equipment by non-unique Users": fig_non_unique_equipment_bar,
+            "Daily Equipment Timeline": fig_time_daily,
+            "Monthly Equipment Timeline": fig_time_monthly}
+    # # webpage layout
+    # app.layout = html.Div(
+    #     style={"backgroundColor": colors["background"]},
+    #     children=[
+    #         html.H1(
+    #             children="Loaning Dashboard",
+    #             style={"textAlign": "center", "color": colors["text"]},
+    #         ),
+    #         html.H4(
+    #             children="Add new CSV files to the system: ",
+    #             style={"textAlign": "left", "color": colors["text"]},
+    #         ),
+    #         dcc.Upload(
+    #             id="upload-data",
+    #             children=html.Div(["Drag and Drop or ", html.A("Select Files")]),
+    #             style={
+    #                 "width": "50%",
+    #                 "height": "60px",
+    #                 "lineHeight": "60px",
+    #                 "borderWidth": "2px",
+    #                 "borderStyle": "dashed",
+    #                 "borderRadius": "5px",
+    #                 "textAlign": "left",
+    #                 "margin": "10px",
+    #             },
+    #             multiple=True,
+    #         ),
+    #         html.H3(
+    #             children="Non-Unique User Pie Chart",
+    #             style={"textAlign": "center", "color": colors["text"]},
+    #         ),
+    #         dcc.Graph(id="pie-graph", figure=fig_pie),
+    #         html.H3(
+    #             children="5 Most Used Equipment (Unique)",
+    #             style={"textAlign": "center", "color": colors["text"]},
+    #         ),
+    #         dcc.Graph(id="top-5-graph", figure=fig_top_5_bar),
+    #         html.H3(
+    #             children="5 Least Used Equipment (Unique)",
+    #             style={"textAlign": "center", "color": colors["text"]},
+    #         ),
+    #         dcc.Graph(id="least-5-graph", figure=fig_least_5_bar),
+    #         html.H3(
+    #             children="Used Equipment by non-unique Users",
+    #             style={"textAlign": "center", "color": colors["text"]},
+    #         ),
+    #         dcc.Graph(
+    #             id="non_unique_equipment_bar", figure=fig_non_unique_equipment_bar
+    #         ),
+    #         html.H3(
+    #             children="Daily Equipment Timeline",
+    #             style={"textAlign": "center", "color": colors["text"]},
+    #         ),
+    #         dcc.Graph(id="-cycle-timeline-graph", figure=fig_time_daily),
+    #         html.H3(
+    #             children="Monthly Equipment Timeline",
+    #             style={"textAlign": "center", "color": colors["text"]},
+    #         ),
+    #         dcc.Graph(id="monthly-timeline-graph", figure=fig_time_monthly),
+    #     ],
+    # )
+
+    # app.run_server(host="0.0.0.0", port=8050, debug=True)
 
 
-    # webpage layout
-    app.layout = html.Div(
-        style={"backgroundColor": colors["background"]},
-        children=[
-            html.H1(
-                children="Loaning Dashboard",
-                style={"textAlign": "center", "color": colors["text"]},
-            ),
-            html.H4(
-                children="Add new CSV files to the system: ",
-                style={"textAlign": "left", "color": colors["text"]},
-            ),
-            dcc.Upload(
-                id="upload-data",
-                children=html.Div(["Drag and Drop or ", html.A("Select Files")]),
-                style={
-                    "width": "50%",
-                    "height": "60px",
-                    "lineHeight": "60px",
-                    "borderWidth": "2px",
-                    "borderStyle": "dashed",
-                    "borderRadius": "5px",
-                    "textAlign": "left",
-                    "margin": "10px",
-                },
-                multiple=True,
-            ),
-            html.H3(
-                children="Non-Unique User Pie Chart",
-                style={"textAlign": "center", "color": colors["text"]},
-            ),
-            dcc.Graph(id="pie-graph", figure=fig_pie),
-            html.H3(
-                children="5 Most Used Equipment (Unique)",
-                style={"textAlign": "center", "color": colors["text"]},
-            ),
-            dcc.Graph(id="top-5-graph", figure=fig_top_5_bar),
-            html.H3(
-                children="5 Least Used Equipment (Unique)",
-                style={"textAlign": "center", "color": colors["text"]},
-            ),
-            dcc.Graph(id="least-5-graph", figure=fig_least_5_bar),
-            html.H3(
-                children="Used Equipment by non-unique Users",
-                style={"textAlign": "center", "color": colors["text"]},
-            ),
-            dcc.Graph(
-                id="non_unique_equipment_bar", figure=fig_non_unique_equipment_bar
-            ),
-            html.H3(
-                children="Daily Equipment Timeline",
-                style={"textAlign": "center", "color": colors["text"]},
-            ),
-            dcc.Graph(id="-cycle-timeline-graph", figure=fig_time_daily),
-            html.H3(
-                children="Monthly Equipment Timeline",
-                style={"textAlign": "center", "color": colors["text"]},
-            ),
-            dcc.Graph(id="monthly-timeline-graph", figure=fig_time_monthly),
-        ],
-    )
-
-    app.run_server(host="0.0.0.0", port=8050, debug=True)
-
+@app.route("/")
+def index():
+    figures = dashboard()
+    return render_template("index.html", figures=figures)
 
 if __name__ == "__main__":
-    dashboard()
+	app.run('127.0.0.1', 5000, debug = True)
+# app.run_server(host="0.0.0.0", port=8050, debug=True)
