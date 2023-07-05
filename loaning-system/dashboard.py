@@ -1,3 +1,4 @@
+import os
 from flask import (
     Flask,
     render_template,
@@ -13,6 +14,10 @@ from app.non_unique_user_usage import (generate_non_unique_user_equipment_bar)
 
 
 app = Flask(__name__)
+
+# creating the variable for the static folder path
+app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "data")
+print("Destination folder: ", app.config["UPLOAD_FOLDER"])
 
 def dashboard():
     """
@@ -55,6 +60,10 @@ def dashboard():
 def index():
     figures = dashboard()
     return render_template("index.html", figures=figures)
+
+@app.route("/upload-files")
+def upload_files():
+    return render_template("upload-files.html")
 
 if __name__ == "__main__":
 	app.run('127.0.0.1', 5000, debug = True)
