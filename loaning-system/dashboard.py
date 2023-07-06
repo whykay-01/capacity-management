@@ -1,8 +1,14 @@
+from curses import flash
+import io
 import os
+import time
 from flask import (
     Flask,
+    redirect,
     render_template,
     request,
+    url_for,
+    session
 )
 
 from app.utils import (load_dataframes, 
@@ -12,11 +18,12 @@ from app.pie_chart import (generate_fig_pie)
 from app.daily_equipment_timeline import (generate_fig_time_cycle)
 from app.monthly_equipment_timeline import (generate_fig_time_cycle_month)
 from app.non_unique_user_usage import (generate_non_unique_user_equipment_bar)
-
+import csv
 
 app = Flask(__name__)
 
 # creating the variable for the static folder path
+# TODO: use this path
 app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "data")
 print("Destination folder: ", app.config["UPLOAD_FOLDER"])
 
@@ -57,27 +64,54 @@ def dashboard():
             "Daily Equipment Timeline": fig_time_daily,
             "Monthly Equipment Timeline": fig_time_monthly}
 
+
 @app.route("/")
 def index():
     figures = dashboard()
     return render_template("index.html", figures=figures)
 
+
 @app.route("/upload-files")
 def upload_files():
     return render_template("upload-files.html")
 
-@app.route("/confirm-upload")
+
+@app.route("/confirmation-page", methods=["POST"])
+def confirmation_page():
+    file = request.files['database_snippet']
+    session['csv_data'] = file
+    if file.filename == '':
+        error = 'No file selected. Please select the file and try again.'
+        flash(error)
+        return render_template('confirmation-page.html')
+    
+    else:
+        csv_data = []
+        csv_file = file.stream.read().decode("UTF-8")
+        csv_file_object = io.StringIO(csv_file)
+        csv_reader = csv.reader(csv_file_object)
+        more_than_10 = False
+        
+        for row in csv_reader:
+            csv_data.append(row)
+
+        if len(csv_data) > 10:
+            more_than_10 = True
+            csv_data = csv_data[:11]
+
+        
+        return render_template('confirmation-page.html', uploaded_file=file.filename, file_content=csv_data, more_than_10=more_than_10, csv_data=file)
+
+@app.route("/confirm-upload", methods=["POST"])
 def confirm_upload():
-
-    upload_files = []
-    upload_files.append(request.files['equipment_cycle'])
-    upload_files.append(request.files['non_unique_user_equipment'])
-    upload_files.append(request.files['test'])
-    upload_files.append(request.files['unique_user_equipment'])
-    upload_files.append(request.files['user_cycle'])
-
-    return render_template("confirm-upload.html", uploaded_files=upload_files)
-
+    # file =  session['csv_data']
+    file = request.files['csv_data']
+    file.save(os.path.join("data", "test.csv"))
+    success = "Your file has been uploaded successfully!"
+    flash(success)
+    time.sleep(5)
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
-	app.run('127.0.0.1', 5000, debug = True)
+    app.secret_key = 'my_secret_key'
+    app.run('127.0.0.1', 5000, debug = True)
