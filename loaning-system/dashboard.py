@@ -59,14 +59,23 @@ def dashboard():
             "Daily Equipment Timeline": fig_time_daily,
             "Monthly Equipment Timeline": fig_time_monthly}
 
+
+
+
 @app.route("/")
 def index():
     figures = dashboard()
     return render_template("index.html", figures=figures)
 
+
+
+
 @app.route("/upload-files")
 def upload_files():
     return render_template("upload-files.html")
+
+
+
 
 @app.route("/confirmation-page", methods=["POST"])
 def confirm_upload():
