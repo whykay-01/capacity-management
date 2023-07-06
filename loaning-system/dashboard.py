@@ -1,10 +1,14 @@
 from curses import flash
 import io
 import os
+import time
 from flask import (
     Flask,
+    redirect,
     render_template,
     request,
+    url_for,
+    session
 )
 
 from app.utils import (load_dataframes, 
@@ -19,6 +23,7 @@ import csv
 app = Flask(__name__)
 
 # creating the variable for the static folder path
+# TODO: use this path
 app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "data")
 print("Destination folder: ", app.config["UPLOAD_FOLDER"])
 
@@ -60,14 +65,10 @@ def dashboard():
             "Monthly Equipment Timeline": fig_time_monthly}
 
 
-
-
 @app.route("/")
 def index():
     figures = dashboard()
     return render_template("index.html", figures=figures)
-
-
 
 
 @app.route("/upload-files")
@@ -75,12 +76,10 @@ def upload_files():
     return render_template("upload-files.html")
 
 
-
-
 @app.route("/confirmation-page", methods=["POST"])
-def confirm_upload():
+def confirmation_page():
     file = request.files['database_snippet']
-
+    session['csv_data'] = file
     if file.filename == '':
         error = 'No file selected. Please select the file and try again.'
         flash(error)
@@ -101,10 +100,18 @@ def confirm_upload():
             csv_data = csv_data[:11]
 
         
-        return render_template('confirmation-page.html', uploaded_file=file.filename, file_content=csv_data, more_than_10=more_than_10)
-    
+        return render_template('confirmation-page.html', uploaded_file=file.filename, file_content=csv_data, more_than_10=more_than_10, csv_data=file)
 
-
+@app.route("/confirm-upload", methods=["POST"])
+def confirm_upload():
+    # file =  session['csv_data']
+    file = request.files['csv_data']
+    file.save(os.path.join("data", "test.csv"))
+    success = "Your file has been uploaded successfully!"
+    flash(success)
+    time.sleep(5)
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
-	app.run('127.0.0.1', 5000, debug = True)
+    app.secret_key = 'my_secret_key'
+    app.run('127.0.0.1', 5000, debug = True)
