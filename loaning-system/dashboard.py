@@ -8,6 +8,10 @@ from app.pie_chart import (generate_fig_pie)
 from app.daily_equipment_timeline import (generate_fig_time_cycle)
 from app.monthly_equipment_timeline import (generate_fig_time_cycle_month)
 from app.non_unique_user_usage import (generate_non_unique_user_equipment_bar)
+from app.database_to_csv import (equipment_cycle_csv, 
+                                 user_cycle_csv, 
+                                 unique_user_equipment_csv, 
+                                 non_unique_user_equipment_csv)
 
 app = Flask(__name__)
 
@@ -108,7 +112,19 @@ def confirm_upload():
         os.remove(file_path)
         del session['csv_file']
 
-        success = "Your file has been uploaded successfully!"
+        # Generate the tables from the new source
+        equipment_cycle = equipment_cycle_csv()
+        user_cycle = user_cycle_csv()
+        unique_user_equipment = unique_user_equipment_csv()
+        non_unique_user_equipment = non_unique_user_equipment_csv()
+
+        # # Upload new csvs
+        equipment_cycle.to_csv(os.path.join("data", "equipment_cycle.csv"), index=False)
+        user_cycle.to_csv(os.path.join("data", "user_cycle.csv"), index=False)
+        unique_user_equipment.to_csv(os.path.join("data", "unique_user_equipment.csv"), index=False)
+        non_unique_user_equipment.to_csv(os.path.join("data", "non_unique_user_equipment.csv"), index=False)
+
+        success = "Your file has been uploaded successfully! Reload the page if you cannot see the update yet."
         flash(success, 'success')
 
     return redirect(url_for('index'))
