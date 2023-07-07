@@ -54,7 +54,6 @@
       {% endif %}
       <div class="col-md-6">
           {% if file_content %}
-          <!-- <input type="hidden" name="csv_data" value="{{ csv_data }}" /> -->
           <h2>CSV Preview:</h2>
           <table class="table table-striped">
               {% for row in file_content %}
@@ -68,10 +67,10 @@
           {% endif %}
       </div>
       <br />
-      <form action="/confirm-upload" method="POST">
+      <form action="/confirm-upload" method="POST" enctype="multipart/form-data">
           <input type="hidden" name="csv_data" value="{{ csv_data }}"> 
           <input type="submit" name="confirm" value="Confirm" class="btn btn-primary" />
-          <a class="btn btn-danger" href="/upload-files">Cancel</a>
+          <a class="btn btn-danger" href="/cancel-upload">Cancel</a>
       </form>
   </div>
   <br />

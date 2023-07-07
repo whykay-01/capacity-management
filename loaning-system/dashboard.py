@@ -1,16 +1,6 @@
-from curses import flash
-import io
 import os
-import time
-from flask import (
-    Flask,
-    redirect,
-    render_template,
-    request,
-    url_for,
-    session
-)
-
+from flask import *
+import pandas as pd
 from app.utils import (load_dataframes, 
                        fill_dict_user_equipment)
 from app.top5_bar_charts import (generate_top_5_bar_chart)
@@ -18,14 +8,17 @@ from app.pie_chart import (generate_fig_pie)
 from app.daily_equipment_timeline import (generate_fig_time_cycle)
 from app.monthly_equipment_timeline import (generate_fig_time_cycle_month)
 from app.non_unique_user_usage import (generate_non_unique_user_equipment_bar)
-import csv
+from app.database_to_csv import (equipment_cycle_csv, 
+                                 user_cycle_csv, 
+                                 unique_user_equipment_csv, 
+                                 non_unique_user_equipment_csv)
 
 app = Flask(__name__)
 
 # creating the variable for the static folder path
 # TODO: use this path
 app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "data")
-print("Destination folder: ", app.config["UPLOAD_FOLDER"])
+app.config["TEMPORARY_FOLDER"] = os.path.join(app.root_path, "temp")
 
 def dashboard():
     """
@@ -79,39 +72,74 @@ def upload_files():
 @app.route("/confirmation-page", methods=["POST"])
 def confirmation_page():
     file = request.files['database_snippet']
-    session['csv_data'] = file
-    if file.filename == '':
-        error = 'No file selected. Please select the file and try again.'
-        flash(error)
-        return render_template('confirmation-page.html')
-    
+    filename= file.filename
+
+    csv_data = pd.read_csv(file)
+    more_than_10 = len(csv_data) > 10
+
+    csv_data_display = []
+
+    # Show the first ten rows of the CSV file in case the file is large
+    if more_than_10:
+        csv_data_display = csv_data[:11].values.tolist()
     else:
-        csv_data = []
-        csv_file = file.stream.read().decode("UTF-8")
-        csv_file_object = io.StringIO(csv_file)
-        csv_reader = csv.reader(csv_file_object)
-        more_than_10 = False
-        
-        for row in csv_reader:
-            csv_data.append(row)
+        csv_data_display = csv_data.values.tolist()
 
-        if len(csv_data) > 10:
-            more_than_10 = True
-            csv_data = csv_data[:11]
+    # Reset the file pointer to the beginning
+    file.seek(0)
 
-        
-        return render_template('confirmation-page.html', uploaded_file=file.filename, file_content=csv_data, more_than_10=more_than_10, csv_data=file)
+    # Save the uploaded file to a temporary location
+    temp_file_path = os.path.join(app.config["TEMPORARY_FOLDER"], filename)
+    file.save(temp_file_path)
+    session['csv_file'] = temp_file_path
+
+    return render_template('confirmation-page.html',
+                           uploaded_file=filename,
+                           file_content=csv_data_display,
+                           more_than_10=more_than_10,
+                           csv_data=csv_data)
+
 
 @app.route("/confirm-upload", methods=["POST"])
 def confirm_upload():
-    # file =  session['csv_data']
-    file = request.files['csv_data']
-    file.save(os.path.join("data", "test.csv"))
-    success = "Your file has been uploaded successfully!"
-    flash(success)
-    time.sleep(5)
+    file_path = session['csv_file']
+
+    if file_path:
+        csv_data = pd.read_csv(file_path)
+        csv_data.to_csv(os.path.join("data", "test.csv"), index=False)
+
+        # Optionally, remove the temporary file after processing
+        os.remove(file_path)
+        del session['csv_file']
+
+        # Generate the tables from the new source
+        equipment_cycle = equipment_cycle_csv()
+        user_cycle = user_cycle_csv()
+        unique_user_equipment = unique_user_equipment_csv()
+        non_unique_user_equipment = non_unique_user_equipment_csv()
+
+        # # Upload new csvs
+        equipment_cycle.to_csv(os.path.join("data", "equipment_cycle.csv"), index=False)
+        user_cycle.to_csv(os.path.join("data", "user_cycle.csv"), index=False)
+        unique_user_equipment.to_csv(os.path.join("data", "unique_user_equipment.csv"), index=False)
+        non_unique_user_equipment.to_csv(os.path.join("data", "non_unique_user_equipment.csv"), index=False)
+
+        success = "Your file has been uploaded successfully! Reload the page if you cannot see the update yet."
+        flash(success, 'success')
+
     return redirect(url_for('index'))
+
+@app.route("/cancel-upload")
+def cancel_upload():
+    temp_file_path = session['csv_file']
+    os.remove(temp_file_path)
+
+    message = "You have aborted the file upload."
+    flash(message, 'error')
+
+    return redirect(url_for('index'))
+
 
 if __name__ == "__main__":
     app.secret_key = 'my_secret_key'
-    app.run('127.0.0.1', 5000, debug = True)
+    app.run('127.0.0.1', 5000, debug=True)
