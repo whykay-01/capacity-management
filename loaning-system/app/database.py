@@ -5,7 +5,7 @@ which are used to produce the csv files.
 
 def generate_main_db():
     main_database = []
-    with open('data/test.csv', encoding='utf-8') as f:
+    with open('../data/test.csv', encoding='utf-8') as f:
         for line in f:
             main_database.append(line.rstrip("\n").split(",")[0:9])
             if line[0] == '':
@@ -15,10 +15,9 @@ def generate_main_db():
     main_database.reverse()
 
 
-def equipment_cycle_database():
+def equipment_cycle_database(main_database=generate_main_db()):
     # [classification, cycles, check out times]
     equipment_cycle_usage_database = []
-    main_database = generate_main_db()
 
     for i in range(len(main_database)):
         if main_database[i][7] == "借":
@@ -67,10 +66,9 @@ def equipment_cycle_database():
     return equipment_cycle_usage_database
 
 
-def user_cycle_database():
+def user_cycle_database(main_database=generate_main_db()):
     # checks how many times a user has checked out and checked in an equipment
     # [user, type, cycles]
-    main_database = generate_main_db()
     user_usage_database = []
     for i in range(len(main_database)):
         if main_database[i][7] == "借":
@@ -98,9 +96,8 @@ def user_cycle_database():
     return user_usage_database
 
 
-def unique_user_equipment_database():
+def unique_user_equipment_database(main_database=generate_main_db()):
     # [equipment, [unique_users]]
-    main_database = generate_main_db()
     user_per_equipment_database = []
     for i in range(len(main_database)):
         if main_database[i][7] == "借":
@@ -132,9 +129,8 @@ def unique_user_equipment_database():
     return user_per_equipment_database
 
 
-def non_unique_user_equipment_database():
+def non_unique_user_equipment_database(main_database=generate_main_db()):
     # [equipment, [non_unique_users]]
-    main_database = generate_main_db()
     user_per_equipment_database = []
     for i in range(len(main_database)):
         if main_database[i][7] == "借":

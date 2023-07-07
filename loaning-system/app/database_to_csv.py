@@ -1,12 +1,11 @@
 """
 This python script is generating the csv files using functions defined in the database.py file.
 """
-
 import pandas as pd
-from database import equipment_cycle_database
-from database import user_cycle_database
-from database import unique_user_equipment_database
-from database import non_unique_user_equipment_database
+from app.database import equipment_cycle_database
+from app.database import user_cycle_database
+from app.database import unique_user_equipment_database
+from app.database import non_unique_user_equipment_database
 
 
 # Equipment, Cycles, Check Out Times (string)
@@ -36,9 +35,3 @@ def non_unique_user_equipment_csv(db=non_unique_user_equipment_database()):
     non_unique_user_equipment.to_csv('non_unique_user_equipment.csv', index=False)
     return non_unique_user_equipment
 
-
-if __name__ == "__main__":
-    print(equipment_cycle_csv())
-    print(user_cycle_csv())
-    print(unique_user_equipment_csv())
-    print(non_unique_user_equipment_csv())
