@@ -1,16 +1,12 @@
-from curses import flash
 import io
 import os
 import time
-from flask import (
-    Flask,
-    redirect,
-    render_template,
-    request,
-    url_for,
-    session
-)
+from flask import *
+import base64
+import codecs
+import csv
 
+import pandas as pd
 from app.utils import (load_dataframes, 
                        fill_dict_user_equipment)
 from app.top5_bar_charts import (generate_top_5_bar_chart)
@@ -79,39 +75,41 @@ def upload_files():
 @app.route("/confirmation-page", methods=["POST"])
 def confirmation_page():
     file = request.files['database_snippet']
-    session['csv_data'] = file
+    
     if file.filename == '':
         error = 'No file selected. Please select the file and try again.'
-        flash(error)
-        return render_template('confirmation-page.html')
+        flash(error, 'error')
+        return redirect(url_for('upload-files'))
     
     else:
-        csv_data = []
-        csv_file = file.stream.read().decode("UTF-8")
-        csv_file_object = io.StringIO(csv_file)
-        csv_reader = csv.reader(csv_file_object)
-        more_than_10 = False
+        csv_data = pd.read_csv(file)
+        more_than_10 = len(csv_data) > 10
         
-        for row in csv_reader:
-            csv_data.append(row)
-
-        if len(csv_data) > 10:
-            more_than_10 = True
-            csv_data = csv_data[:11]
-
+        csv_data_display = pd.DataFrame()
+        if more_than_10:
+            csv_data_display = csv_data[:11]
+    
+        session['csv_data'] = csv_data
         
-        return render_template('confirmation-page.html', uploaded_file=file.filename, file_content=csv_data, more_than_10=more_than_10, csv_data=file)
+        return render_template('confirmation-page.html', 
+                               uploaded_file=file.filename, 
+                               file_content=csv_data_display, 
+                               more_than_10=more_than_10, 
+                               csv_data=csv_data)
+
 
 @app.route("/confirm-upload", methods=["POST"])
 def confirm_upload():
-    # file =  session['csv_data']
-    file = request.files['csv_data']
-    file.save(os.path.join("data", "test.csv"))
+    csv_data = session['csv_data']
+
+    csv_data.to_csv(os.path.join("data", "test.csv"), index=False)
+
     success = "Your file has been uploaded successfully!"
-    flash(success)
-    time.sleep(5)
+    flash(success, 'success')
+
     return redirect(url_for('index'))
+
 
 if __name__ == "__main__":
     app.secret_key = 'my_secret_key'
-    app.run('127.0.0.1', 5000, debug = True)
+    app.run('127.0.0.1', 5000, debug=True)
