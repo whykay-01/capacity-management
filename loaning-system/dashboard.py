@@ -76,26 +76,23 @@ def upload_files():
 def confirmation_page():
     file = request.files['database_snippet']
     
-    if file.filename == '':
-        error = 'No file selected. Please select the file and try again.'
-        flash(error, 'error')
-        return redirect(url_for('upload-files'))
-    
+    csv_data = pd.read_csv(file)
+    more_than_10 = len(csv_data) > 10
+
+    csv_data_display = []
+
+    if more_than_10:
+        csv_data_display = csv_data[:11].values.tolist()
     else:
-        csv_data = pd.read_csv(file)
-        more_than_10 = len(csv_data) > 10
-        
-        csv_data_display = pd.DataFrame()
-        if more_than_10:
-            csv_data_display = csv_data[:11]
+        csv_data_display = csv_data.values.tolist()
+
+    session['csv_data'] = csv_data.to_csv(index=False)
     
-        session['csv_data'] = csv_data
-        
-        return render_template('confirmation-page.html', 
-                               uploaded_file=file.filename, 
-                               file_content=csv_data_display, 
-                               more_than_10=more_than_10, 
-                               csv_data=csv_data)
+    return render_template('confirmation-page.html', 
+                            uploaded_file=file.filename, 
+                            file_content=csv_data_display, 
+                            more_than_10=more_than_10, 
+                            csv_data=csv_data)
 
 
 @app.route("/confirm-upload", methods=["POST"])
