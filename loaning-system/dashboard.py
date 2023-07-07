@@ -1,11 +1,5 @@
-import io
 import os
-import time
 from flask import *
-import base64
-import codecs
-import csv
-
 import pandas as pd
 from app.utils import (load_dataframes, 
                        fill_dict_user_equipment)
@@ -14,14 +8,13 @@ from app.pie_chart import (generate_fig_pie)
 from app.daily_equipment_timeline import (generate_fig_time_cycle)
 from app.monthly_equipment_timeline import (generate_fig_time_cycle_month)
 from app.non_unique_user_usage import (generate_non_unique_user_equipment_bar)
-import csv
 
 app = Flask(__name__)
 
 # creating the variable for the static folder path
 # TODO: use this path
 app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "data")
-print("Destination folder: ", app.config["UPLOAD_FOLDER"])
+app.config["TEMPORARY_FOLDER"] = os.path.join(app.root_path, "temp")
 
 def dashboard():
     """
@@ -75,34 +68,48 @@ def upload_files():
 @app.route("/confirmation-page", methods=["POST"])
 def confirmation_page():
     file = request.files['database_snippet']
-    
+    filename= file.filename
+
     csv_data = pd.read_csv(file)
     more_than_10 = len(csv_data) > 10
 
     csv_data_display = []
 
+    # Show the first ten rows of the CSV file in case the file is large
     if more_than_10:
         csv_data_display = csv_data[:11].values.tolist()
     else:
         csv_data_display = csv_data.values.tolist()
 
-    session['csv_data'] = csv_data.to_csv(index=False)
-    
-    return render_template('confirmation-page.html', 
-                            uploaded_file=file.filename, 
-                            file_content=csv_data_display, 
-                            more_than_10=more_than_10, 
-                            csv_data=csv_data)
+    # Reset the file pointer to the beginning
+    file.seek(0)
+
+    # Save the uploaded file to a temporary location
+    temp_file_path = os.path.join(app.config["TEMPORARY_FOLDER"], filename)
+    file.save(temp_file_path)
+    session['csv_file'] = temp_file_path
+
+    return render_template('confirmation-page.html',
+                           uploaded_file=filename,
+                           file_content=csv_data_display,
+                           more_than_10=more_than_10,
+                           csv_data=csv_data)
 
 
 @app.route("/confirm-upload", methods=["POST"])
 def confirm_upload():
-    csv_data = session['csv_data']
+    file_path = session['csv_file']
 
-    csv_data.to_csv(os.path.join("data", "test.csv"), index=False)
+    if file_path:
+        csv_data = pd.read_csv(file_path)
+        csv_data.to_csv(os.path.join("data", "test.csv"), index=False)
 
-    success = "Your file has been uploaded successfully!"
-    flash(success, 'success')
+        # Optionally, remove the temporary file after processing
+        os.remove(file_path)
+        del session['csv_file']
+
+        success = "Your file has been uploaded successfully!"
+        flash(success, 'success')
 
     return redirect(url_for('index'))
 
