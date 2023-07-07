@@ -106,6 +106,16 @@ def confirm_upload():
 
     return redirect(url_for('index'))
 
+@app.route("/cancel-upload")
+def cancel_upload():
+    temp_file_path = session['csv_file']
+    os.remove(temp_file_path)
+
+    message = "You have aborted the file upload."
+    flash(message, 'error')
+
+    return redirect(url_for('index'))
+
 
 if __name__ == "__main__":
     app.secret_key = 'my_secret_key'
