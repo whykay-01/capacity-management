@@ -1,22 +1,24 @@
 """
-This python script is using the database file called test.csv to generate functions
+This python script is using the database snapshot file called test.csv to generate functions
 which are used to produce the csv files.
 """
 
-main_database = []
-with open('test.csv', encoding='utf-8') as f:
-    for line in f:
-        main_database.append(line.rstrip("\n").split(",")[0:9])
-        if line[0] == '':
-            break
-# oldest to newest
-print(len(main_database))
-main_database.reverse()
+def generate_main_db():
+    main_database = []
+    with open('data/test.csv', encoding='utf-8') as f:
+        for line in f:
+            main_database.append(line.rstrip("\n").split(",")[0:9])
+            if line[0] == '':
+                break
+    # oldest to newest
+    print(len(main_database))
+    main_database.reverse()
 
 
 def equipment_cycle_database():
     # [classification, cycles, check out times]
     equipment_cycle_usage_database = []
+    main_database = generate_main_db()
 
     for i in range(len(main_database)):
         if main_database[i][7] == "借":
@@ -68,6 +70,7 @@ def equipment_cycle_database():
 def user_cycle_database():
     # checks how many times a user has checked out and checked in an equipment
     # [user, type, cycles]
+    main_database = generate_main_db()
     user_usage_database = []
     for i in range(len(main_database)):
         if main_database[i][7] == "借":
@@ -97,6 +100,7 @@ def user_cycle_database():
 
 def unique_user_equipment_database():
     # [equipment, [unique_users]]
+    main_database = generate_main_db()
     user_per_equipment_database = []
     for i in range(len(main_database)):
         if main_database[i][7] == "借":
@@ -130,6 +134,7 @@ def unique_user_equipment_database():
 
 def non_unique_user_equipment_database():
     # [equipment, [non_unique_users]]
+    main_database = generate_main_db()
     user_per_equipment_database = []
     for i in range(len(main_database)):
         if main_database[i][7] == "借":
@@ -153,12 +158,3 @@ def non_unique_user_equipment_database():
     for i in range(len(user_per_equipment_database)):
         user_num_equipment_database.append([user_per_equipment_database[i][0], len(user_per_equipment_database[i][1])])
     return user_per_equipment_database
-
-
-if __name__ == "__main__":
-    equipment_cycle_database()
-    print(user_cycle_database())
-    unique_user_equipment_database()
-    non_unique_user_equipment_database()
-
-
