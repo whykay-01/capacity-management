@@ -2,17 +2,19 @@
 This python script is using the database snapshot file called test.csv to generate functions
 which are used to produce the csv files.
 """
+import os
 
 def generate_main_db():
     main_database = []
-    with open('../data/test.csv', encoding='utf-8') as f:
+    path = os.path.join(os.getcwd(), "data")
+
+    with open(path + '/test.csv', encoding='utf-8') as f:
         for line in f:
             main_database.append(line.rstrip("\n").split(",")[0:9])
             if line[0] == '':
                 break
-    # oldest to newest
-    print(len(main_database))
-    main_database.reverse()
+            
+    return main_database
 
 
 def equipment_cycle_database(main_database=generate_main_db()):
@@ -126,6 +128,7 @@ def unique_user_equipment_database(main_database=generate_main_db()):
     user_num_equipment_database = []
     for i in range(len(user_per_equipment_database)):
         user_num_equipment_database.append([user_per_equipment_database[i][0], len(user_per_equipment_database[i][1])])
+    
     return user_per_equipment_database
 
 
@@ -153,4 +156,5 @@ def non_unique_user_equipment_database(main_database=generate_main_db()):
     user_num_equipment_database = []
     for i in range(len(user_per_equipment_database)):
         user_num_equipment_database.append([user_per_equipment_database[i][0], len(user_per_equipment_database[i][1])])
+    
     return user_per_equipment_database
