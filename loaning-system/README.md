@@ -13,7 +13,7 @@ cd loaning-system
 Run the following command to build the docker image for the python application only (we will call the image `dashboard-image`):
 
 ```bash
-docker build -t dashboard-image .
+docker build -t dashboard-image-last .
 ```
 
 ### Step 2

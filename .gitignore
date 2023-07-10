@@ -10,3 +10,4 @@ virtual-assistant/logs/
 virtual-assistant/langflow.db
 loaning-system/app/__pycache__
 original-datasources/
+testing-data.csv

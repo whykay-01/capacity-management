@@ -86,10 +86,12 @@ def generate_time_series(equipment_cycle_df):
                         
                         if (
                             pd.to_datetime(
-                                time_list[j], dayfirst=True, format="%d/%m/%Y"
+                                # time_list[j], dayfirst=True, format="%d/%m/%Y"
+                                time_list[j], dayfirst=False, format="%m/%d/%Y"
                             ).isoformat()[0:10]
                             < pd.to_datetime(
-                                check_out_time, dayfirst=True, format="%d/%m/%Y"
+                                # check_out_time, dayfirst=True, format="%d/%m/%Y"
+                                check_out_time, dayfirst=False, format="%m/%d/%Y"
                             ).isoformat()[0:10]
                         ):
                             time_list.insert(j + 1, check_out_time)
