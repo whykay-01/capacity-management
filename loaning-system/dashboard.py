@@ -124,15 +124,25 @@ def confirm_upload():
         csv_data = pd.read_csv(file_path)
         csv_data.to_csv(os.path.join("data", "test.csv"), index=False)
 
-        # Optionally, remove the temporary file after processing
+        # remove the temporary file after processing
         os.remove(file_path)
         del session['csv_file']
 
+        main_database = generate_main_db()
+
         # Generate the tables from the new source
-        equipment_cycle = equipment_cycle_csv()
-        user_cycle = user_cycle_csv()
-        unique_user_equipment = unique_user_equipment_csv()
-        non_unique_user_equipment = non_unique_user_equipment_csv()
+        equipment_cycle = equipment_cycle_csv(
+            equipment_cycle_database(main_database)
+            )
+        user_cycle = user_cycle_csv(
+            user_cycle_database(main_database)
+            )
+        unique_user_equipment = unique_user_equipment_csv(
+            unique_user_equipment_database(main_database)
+            )
+        non_unique_user_equipment = non_unique_user_equipment_csv(
+            non_unique_user_equipment_database(main_database)
+            )
 
         # # Upload new csvs
         equipment_cycle.to_csv(os.path.join("data", "equipment_cycle.csv"), index=False)
