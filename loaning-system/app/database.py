@@ -17,7 +17,7 @@ def generate_main_db():
     return main_database
 
 
-def equipment_cycle_database(main_database=generate_main_db()):
+def equipment_cycle_database(main_database):
     # [classification, cycles, check out times]
     equipment_cycle_usage_database = []
 
@@ -68,7 +68,7 @@ def equipment_cycle_database(main_database=generate_main_db()):
     return equipment_cycle_usage_database
 
 
-def user_cycle_database(main_database=generate_main_db()):
+def user_cycle_database(main_database):
     # checks how many times a user has checked out and checked in an equipment
     # [user, type, cycles]
     user_usage_database = []
@@ -98,7 +98,7 @@ def user_cycle_database(main_database=generate_main_db()):
     return user_usage_database
 
 
-def unique_user_equipment_database(main_database=generate_main_db()):
+def unique_user_equipment_database(main_database):
     # [equipment, [unique_users]]
     user_per_equipment_database = []
     for i in range(len(main_database)):
@@ -132,7 +132,7 @@ def unique_user_equipment_database(main_database=generate_main_db()):
     return user_per_equipment_database
 
 
-def non_unique_user_equipment_database(main_database=generate_main_db()):
+def non_unique_user_equipment_database(main_database):
     # [equipment, [non_unique_users]]
     user_per_equipment_database = []
     for i in range(len(main_database)):
