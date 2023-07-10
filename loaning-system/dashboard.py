@@ -34,7 +34,10 @@ app = Flask(__name__)
 # creating the variable for the static folder path
 # TODO: use this path
 app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "data")
-app.config["TEMPORARY_FOLDER"] = os.path.join(app.root_path, "temp")
+app.config["TEMPORARY_FOLDER"] = os.path.join(app.root_path, "data/temp")
+
+VOLUME_MOUNTPOINT = "data"
+TEMPORARY_MOUNTPOINT = "data/temp"
 
 def dashboard():
     """
@@ -105,7 +108,8 @@ def confirmation_page():
     file.seek(0)
 
     # Save the uploaded file to a temporary location
-    temp_file_path = os.path.join(app.config["TEMPORARY_FOLDER"], filename)
+    # TODO: temp_file_path = os.path.join("/temp", filename)
+    temp_file_path = os.path.join(TEMPORARY_MOUNTPOINT, filename)
     file.save(temp_file_path)
     session['csv_file'] = temp_file_path
 
@@ -122,7 +126,7 @@ def confirm_upload():
 
     if file_path:
         csv_data = pd.read_csv(file_path)
-        csv_data.to_csv(os.path.join("data", "test.csv"), index=False)
+        csv_data.to_csv(os.path.join(VOLUME_MOUNTPOINT, "test.csv"), index=False)
 
         # remove the temporary file after processing
         os.remove(file_path)
@@ -145,10 +149,10 @@ def confirm_upload():
             )
 
         # # Upload new csvs
-        equipment_cycle.to_csv(os.path.join("data", "equipment_cycle.csv"), index=False)
-        user_cycle.to_csv(os.path.join("data", "user_cycle.csv"), index=False)
-        unique_user_equipment.to_csv(os.path.join("data", "unique_user_equipment.csv"), index=False)
-        non_unique_user_equipment.to_csv(os.path.join("data", "non_unique_user_equipment.csv"), index=False)
+        equipment_cycle.to_csv(os.path.join(VOLUME_MOUNTPOINT, "equipment_cycle.csv"), index=False)
+        user_cycle.to_csv(os.path.join(VOLUME_MOUNTPOINT, "user_cycle.csv"), index=False)
+        unique_user_equipment.to_csv(os.path.join(VOLUME_MOUNTPOINT, "unique_user_equipment.csv"), index=False)
+        non_unique_user_equipment.to_csv(os.path.join(VOLUME_MOUNTPOINT, "non_unique_user_equipment.csv"), index=False)
 
         success = "Your file has been uploaded successfully! Reload the page if you cannot see the update yet."
         flash(success, 'success')

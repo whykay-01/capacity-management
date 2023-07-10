@@ -7,7 +7,8 @@ import os
 def generate_main_db():
     main_database = []
     path = os.path.join(os.getcwd(), "data")
-
+    # path = "/data"
+    
     with open(path + '/test.csv', encoding='utf-8') as f:
         for line in f:
             main_database.append(line.rstrip("\n").split(",")[0:9])
