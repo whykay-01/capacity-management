@@ -1,17 +1,33 @@
 import os
 from flask import *
 import pandas as pd
+
+# importing helpers
 from app.utils import (load_dataframes, 
                        fill_dict_user_equipment)
+
+# importing functions which generate the figures
 from app.top5_bar_charts import (generate_top_5_bar_chart)
 from app.pie_chart import (generate_fig_pie)
 from app.daily_equipment_timeline import (generate_fig_time_cycle)
 from app.monthly_equipment_timeline import (generate_fig_time_cycle_month)
 from app.non_unique_user_usage import (generate_non_unique_user_equipment_bar)
-from app.database_to_csv import (equipment_cycle_csv, 
-                                 user_cycle_csv, 
-                                 unique_user_equipment_csv, 
-                                 non_unique_user_equipment_csv)
+
+# importing functions which generate the DB inputs
+from app.database import (
+    generate_main_db,
+    equipment_cycle_database,
+    user_cycle_database,
+    unique_user_equipment_database,
+    non_unique_user_equipment_database)
+
+# importing functions which transform DB into CSV
+from app.database_to_csv import (
+    equipment_cycle_csv, 
+    user_cycle_csv, 
+    unique_user_equipment_csv, 
+    non_unique_user_equipment_csv)
+
 
 app = Flask(__name__)
 
