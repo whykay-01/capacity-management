@@ -6,9 +6,9 @@ First of all, I have to specify that there are 2 different versions of `langchai
 
 Langchain is a framework that allows the end-user to interact with a variety of Large Language Models (LLMs) to produce some high-level applications. The framework is designed to be modular, so that the user can easily add new LLMs to the framework. The framework is also designed to be extensible, so that the user can easily add new applications to the framework.
 
-#### How am I going to approach the installation of the package and work with it? 
+#### How am I going to approach the installation of the package and work with it?
 
-First of all, the package is gigantic, and therefore I suggest to create a virtual environment. 
+First of all, the package is gigantic, and therefore I suggest to create a virtual environment.
 
 ```
 python3 -m venv venv
@@ -38,7 +38,7 @@ In this repo I am focusing on the creation of the [agents](https://langchain-lan
 2. Create a simple storage unit that will be able to store the data.
 3. Report back on the progress and then start working on specific tasks.
 
-Side notes p.2: 
+Side notes p.2:
 
 1. All the functions and classes are available in [github repo](https://github.com/hwchase17/langchain/blob/master/langchain/), so I will be using them as a reference point. All the classes available for the functionality are also available there.
 
@@ -46,9 +46,12 @@ Side notes p.2:
 
 pip uninstall langflow
 
-# RESOURCES 
-1. https://community.openai.com/t/using-redis-for-embeddings/23517
-2. https://www.youtube.com/watch?v=au2WVVGUvc8&ab_channel=LiamOttley
-3. https://github.com/ToxyBorg/Hugging-Face-Hub-Langchain-Document-Embeddings
-4. https://medium.com/the-techlife/using-huggingface-openai-and-cohere-models-with-langchain-db57af14ac5b
-5. https://redis.io/docs/about/
+# RESOURCES
+
+| # | Name/desc of the source | Link |
+| 1 | How to use Redis DB for embeddings | https://community.openai.com/t/using-redis-for-embeddings/23517 |
+| 2 | Langchain tutorial | https://www.youtube.com/watch?v=au2WVVGUvc8&ab_channel=LiamOttley |
+| 3 | Embeddings with Hugging Face | https://github.com/ToxyBorg/Hugging-Face-Hub-Langchain-Document-Embeddings |
+| 4 | Using HuggingFace, OpenAI, and Cohere models with Langchain | https://medium.com/the-techlife/using-huggingface-openai-and-cohere-models-with-langchain-db57af14ac5b |
+| 5 | Redis Docs | https://redis.io/docs/about/ |
+| 6 | More on preprocessing data before embeddings | https://www.kaggle.com/code/christofhenkel/how-to-preprocessing-when-using-embeddings |
