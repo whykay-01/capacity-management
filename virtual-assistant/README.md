@@ -48,6 +48,9 @@ pip uninstall langflow
 
 # RESOURCES
 
+https://github.com/scrapy/scrapy?ref=blog.apify.com
+https://docs.scrapy.org/en/latest/intro/tutorial.html
+
 # RESOURCES
 
 | #   | Name/desc of the source                                                                                                                                                              |
