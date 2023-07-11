@@ -48,10 +48,13 @@ pip uninstall langflow
 
 # RESOURCES
 
-| # | Name/desc of the source | Link |
-| 1 | How to use Redis DB for embeddings | https://community.openai.com/t/using-redis-for-embeddings/23517 |
-| 2 | Langchain tutorial | https://www.youtube.com/watch?v=au2WVVGUvc8&ab_channel=LiamOttley |
-| 3 | Embeddings with Hugging Face | https://github.com/ToxyBorg/Hugging-Face-Hub-Langchain-Document-Embeddings |
-| 4 | Using HuggingFace, OpenAI, and Cohere models with Langchain | https://medium.com/the-techlife/using-huggingface-openai-and-cohere-models-with-langchain-db57af14ac5b |
-| 5 | Redis Docs | https://redis.io/docs/about/ |
-| 6 | More on preprocessing data before embeddings | https://www.kaggle.com/code/christofhenkel/how-to-preprocessing-when-using-embeddings |
+# RESOURCES
+
+| #   | Name/desc of the source                                                                                                                                               |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | [How to use Redis DB for embeddings](https://community.openai.com/t/using-redis-for-embeddings/23517)                                                                 |
+| 2   | [Langchain tutorial](https://www.youtube.com/watch?v=au2WVVGUvc8&ab_channel=LiamOttley)                                                                               |
+| 3   | [Embeddings with Hugging Face](https://github.com/ToxyBorg/Hugging-Face-Hub-Langchain-Document-Embeddings)                                                            |
+| 4   | [Using HuggingFace, OpenAI, and Cohere models with Langchain](https://medium.com/the-techlife/using-huggingface-openai-and-cohere-models-with-langchain-db57af14ac5b) |
+| 5   | [Redis Docs](https://redis.io/docs/about/)                                                                                                                            |
+| 6   | [More on preprocessing data before embeddings](https://www.kaggle.com/code/christofhenkel/how-to-preprocessing-when-using-embeddings)                                 |
