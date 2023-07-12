@@ -31,13 +31,9 @@ from app.database_to_csv import (
 
 app = Flask(__name__)
 
-# creating the variable for the static folder path
-# TODO: use this path
-app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "data")
-app.config["TEMPORARY_FOLDER"] = os.path.join(app.root_path, "data/temp")
-
-VOLUME_MOUNTPOINT = "data"
-TEMPORARY_MOUNTPOINT = "data/temp"
+# creating constants for the static folder path
+VOLUME_MOUNTPOINT = "/data"
+TEMPORARY_MOUNTPOINT = "/data/temp"
 
 def dashboard():
     """
@@ -46,7 +42,7 @@ def dashboard():
     :return: dictionary of the graphs
     """
     # loading the dataframes
-    user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df = load_dataframes()
+    user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df = load_dataframes()[0]
     
     # turning dictionary back into a dataframe and then sorting it
     equipment_usertype_df = fill_dict_user_equipment(unique_user_equipment_df, user_cycle_df, "Unique Users")
@@ -79,8 +75,12 @@ def dashboard():
 
 @app.route("/")
 def index():
-    figures = dashboard()
-    return render_template("index.html", figures=figures)
+    valid_dfs = load_dataframes()[1]
+    try:
+        figures = dashboard()
+    except:
+        figures = None
+    return render_template("index.html", figures=figures, valid_dfs=valid_dfs)
 
 
 @app.route("/upload-files")
@@ -122,33 +122,35 @@ def confirmation_page():
 
 @app.route("/confirm-upload", methods=["POST"])
 def confirm_upload():
-    file_path = session['csv_file']
-
-    if file_path:
+    file_path = session.get('csv_file')
+    
+    try:
         csv_data = pd.read_csv(file_path)
+        # FIXME: even the wrong file is uploaded
         csv_data.to_csv(os.path.join(VOLUME_MOUNTPOINT, "test.csv"), index=False)
 
-        # remove the temporary file after processing
+        # Remove the temporary file after processing
         os.remove(file_path)
         del session['csv_file']
 
+        # TODO: Make a separate function in the utils.py file
         main_database = generate_main_db()
 
         # Generate the tables from the new source
         equipment_cycle = equipment_cycle_csv(
             equipment_cycle_database(main_database)
-            )
+        )
         user_cycle = user_cycle_csv(
             user_cycle_database(main_database)
-            )
+        )
         unique_user_equipment = unique_user_equipment_csv(
             unique_user_equipment_database(main_database)
-            )
+        )
         non_unique_user_equipment = non_unique_user_equipment_csv(
             non_unique_user_equipment_database(main_database)
-            )
+        )
 
-        # # Upload new csvs
+        # Upload new CSVs
         equipment_cycle.to_csv(os.path.join(VOLUME_MOUNTPOINT, "equipment_cycle.csv"), index=False)
         user_cycle.to_csv(os.path.join(VOLUME_MOUNTPOINT, "user_cycle.csv"), index=False)
         unique_user_equipment.to_csv(os.path.join(VOLUME_MOUNTPOINT, "unique_user_equipment.csv"), index=False)
@@ -156,8 +158,18 @@ def confirm_upload():
 
         success = "Your file has been uploaded successfully! Reload the page if you cannot see the update yet."
         flash(success, 'success')
+        return redirect(url_for('index'))
+    
+    except pd.errors.ParserError:
+        error = "The uploaded file is not in the correct format. Please upload a valid CSV file."
+        flash(error, 'error')
+        return redirect(url_for('upload_files'))
+    
+    except Exception as e:
+        error = "An error occurred during file processing. Please try again."
+        flash(error, 'error')
+        return redirect(url_for('upload_files'))
 
-    return redirect(url_for('index'))
 
 @app.route("/cancel-upload")
 def cancel_upload():
@@ -172,4 +184,4 @@ def cancel_upload():
 
 if __name__ == "__main__":
     app.secret_key = 'my_secret_key'
-    app.run('127.0.0.1', 5000, debug=True)
+    app.run('0.0.0.0', 8050, debug=True)

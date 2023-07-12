@@ -3,31 +3,41 @@ import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
 
-def load_dataframes(volume_mountpoint = '/data'):
+def load_dataframes():
     """
-    this function loads the dataframes from the csv files
-    :param volume_mountpoint: the path to the volume mountpoint (OPTIONAL)
-    :return: list of loaded pandas dataframes
+    This function loads the dataframes from the CSV files.
+    :return: List of loaded pandas dataframes
     """
-    
-    # TODO: Change this to the correct path 
-    # volume_mountpoint = "/data" 
-    volume_mountpoint = os.getcwd() + '/data'
+    volume_mountpoint = "/data"
+    valid_dfs = True
 
+    dataframes = []
 
-    # Set the path to the CSV files relative to the volume mountpoint
-    user_cycle_csv_path = os.path.join(volume_mountpoint, "user_cycle.csv")
-    unique_user_equipment_csv_path = os.path.join(volume_mountpoint, "unique_user_equipment.csv")
-    non_unique_user_equipment_csv_path = os.path.join(volume_mountpoint, "non_unique_user_equipment.csv")
-    equipment_cycle_csv_path = os.path.join(volume_mountpoint, "equipment_cycle.csv")
+    # Define the file paths
+    file_paths = [
+        "user_cycle.csv",
+        "unique_user_equipment.csv",
+        "non_unique_user_equipment.csv",
+        "equipment_cycle.csv"
+    ]
 
-    # Read the CSV files using the updated paths
-    user_cycle_df = pd.read_csv(user_cycle_csv_path)
-    unique_user_equipment_df = pd.read_csv(unique_user_equipment_csv_path).sort_values(by="Unique Users", ascending=False)
-    non_unique_user_equipment_df = pd.read_csv(non_unique_user_equipment_csv_path).sort_values(by="Users", ascending=False)
-    equipment_cycle_df = pd.read_csv(equipment_cycle_csv_path).sort_values(by="Equipment", ascending=False)
+    for file_name in file_paths:
+        csv_path = os.path.join(volume_mountpoint, file_name)
+        
+        try:
+            df = pd.read_csv(csv_path)
+            dataframes.append(df)
+        except FileNotFoundError:
+            print(f"File '{file_name}' not found. Skipping...")
+            valid_dfs = False
+        except pd.errors.EmptyDataError:
+            print(f"File '{file_name}' is empty. Skipping...")
+            valid_dfs = False
+        except pd.errors.ParserError:
+            print(f"Error parsing file '{file_name}'. Skipping...")
+            valid_dfs = False
 
-    return [user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df]
+    return [dataframes, valid_dfs]
 
 
 

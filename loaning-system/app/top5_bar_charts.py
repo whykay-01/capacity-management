@@ -3,10 +3,8 @@ This file is responsible for creating two bar charts (most and least 5 used equi
 """
 
 import json
-import os
 import plotly
 import plotly.express as px
-import pandas as pd
 import plotly.graph_objects as go
 
 from app.utils import load_dataframes

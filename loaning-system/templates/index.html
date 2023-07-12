@@ -68,33 +68,42 @@
         </ul>
       </div>
     </nav>
-    <div class="container">
-      <br />
-      <div class="graph-section">
-        <h3>Non-Unique User Pie Chart</h3>
-        <div id="pie-graph"></div>
+    {% if valid_dfs %}
+      <div class="container">
+        <br />
+        <div class="graph-section">
+          <h3>Non-Unique User Pie Chart</h3>
+          <div id="pie-graph"></div>
+        </div>
+        <div class="graph-section">
+          <h3>5 Most Used Equipment (Unique)</h3>
+          <div id="top-5-graph"></div>
+        </div>
+        <div class="graph-section">
+          <h3>5 Least Used Equipment (Unique)</h3>
+          <div id="least-5-graph"></div>
+        </div>
+        <div class="graph-section">
+          <h3>Used Equipment by non-unique Users</h3>
+          <div id="repetitive-loans"></div>
+        </div>
+        <div class="graph-section">
+          <h3>Daily Equipment Timeline</h3>
+          <div id="daily-loanings-graph"></div>
+        </div>
+        <div class="graph-section">
+          <h3>Monthly Equipment Timeline</h3>
+          <div id="monthly-loanings-graph"></div>
+        </div>
       </div>
-      <div class="graph-section">
-        <h3>5 Most Used Equipment (Unique)</h3>
-        <div id="top-5-graph"></div>
+    {% else %}
+      <div class="container">
+        <br />
+        <div class="graph-section text-danger">
+          <h3>Data is corrupted! Please re-upload the source file and make sure it's in the correct format!</h3>
+        </div>
       </div>
-      <div class="graph-section">
-        <h3>5 Least Used Equipment (Unique)</h3>
-        <div id="least-5-graph"></div>
-      </div>
-      <div class="graph-section">
-        <h3>Used Equipment by non-unique Users</h3>
-        <div id="repetitive-loans"></div>
-      </div>
-      <div class="graph-section">
-        <h3>Daily Equipment Timeline</h3>
-        <div id="daily-loanings-graph"></div>
-      </div>
-      <div class="graph-section">
-        <h3>Monthly Equipment Timeline</h3>
-        <div id="monthly-loanings-graph"></div>
-      </div>
-    </div>
+    {% endif %}
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script type="text/javascript">
