@@ -31,13 +31,9 @@ from app.database_to_csv import (
 
 app = Flask(__name__)
 
-# creating the variable for the static folder path
-# TODO: use this path
-app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "data")
-app.config["TEMPORARY_FOLDER"] = os.path.join(app.root_path, "data/temp")
-
-VOLUME_MOUNTPOINT = "data"
-TEMPORARY_MOUNTPOINT = "data/temp"
+# creating constants for the static folder path
+VOLUME_MOUNTPOINT = "/data"
+TEMPORARY_MOUNTPOINT = "/data/temp"
 
 def dashboard():
     """
@@ -172,4 +168,4 @@ def cancel_upload():
 
 if __name__ == "__main__":
     app.secret_key = 'my_secret_key'
-    app.run('127.0.0.1', 5000, debug=True)
+    app.run('0.0.0.0', 8050, debug=True)
