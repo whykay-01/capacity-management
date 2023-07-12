@@ -122,33 +122,35 @@ def confirmation_page():
 
 @app.route("/confirm-upload", methods=["POST"])
 def confirm_upload():
-    file_path = session['csv_file']
-
-    if file_path:
+    file_path = session.get('csv_file')
+    
+    try:
         csv_data = pd.read_csv(file_path)
+        # FIXME: even the wrong file is uploaded
         csv_data.to_csv(os.path.join(VOLUME_MOUNTPOINT, "test.csv"), index=False)
 
-        # remove the temporary file after processing
+        # Remove the temporary file after processing
         os.remove(file_path)
         del session['csv_file']
 
+        # TODO: Make a separate function in the utils.py file
         main_database = generate_main_db()
 
         # Generate the tables from the new source
         equipment_cycle = equipment_cycle_csv(
             equipment_cycle_database(main_database)
-            )
+        )
         user_cycle = user_cycle_csv(
             user_cycle_database(main_database)
-            )
+        )
         unique_user_equipment = unique_user_equipment_csv(
             unique_user_equipment_database(main_database)
-            )
+        )
         non_unique_user_equipment = non_unique_user_equipment_csv(
             non_unique_user_equipment_database(main_database)
-            )
+        )
 
-        # # Upload new csvs
+        # Upload new CSVs
         equipment_cycle.to_csv(os.path.join(VOLUME_MOUNTPOINT, "equipment_cycle.csv"), index=False)
         user_cycle.to_csv(os.path.join(VOLUME_MOUNTPOINT, "user_cycle.csv"), index=False)
         unique_user_equipment.to_csv(os.path.join(VOLUME_MOUNTPOINT, "unique_user_equipment.csv"), index=False)
@@ -156,8 +158,18 @@ def confirm_upload():
 
         success = "Your file has been uploaded successfully! Reload the page if you cannot see the update yet."
         flash(success, 'success')
+        return redirect(url_for('index'))
+    
+    except pd.errors.ParserError:
+        error = "The uploaded file is not in the correct format. Please upload a valid CSV file."
+        flash(error, 'error')
+        return redirect(url_for('upload_files'))
+    
+    except Exception as e:
+        error = "An error occurred during file processing. Please try again."
+        flash(error, 'error')
+        return redirect(url_for('upload_files'))
 
-    return redirect(url_for('index'))
 
 @app.route("/cancel-upload")
 def cancel_upload():
