@@ -42,7 +42,7 @@ def dashboard():
     :return: dictionary of the graphs
     """
     # loading the dataframes
-    user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df = load_dataframes()
+    user_cycle_df, unique_user_equipment_df, non_unique_user_equipment_df, equipment_cycle_df = load_dataframes()[0]
     
     # turning dictionary back into a dataframe and then sorting it
     equipment_usertype_df = fill_dict_user_equipment(unique_user_equipment_df, user_cycle_df, "Unique Users")
@@ -75,8 +75,12 @@ def dashboard():
 
 @app.route("/")
 def index():
-    figures = dashboard()
-    return render_template("index.html", figures=figures)
+    valid_dfs = load_dataframes()[1]
+    try:
+        figures = dashboard()
+    except:
+        figures = None
+    return render_template("index.html", figures=figures, valid_dfs=valid_dfs)
 
 
 @app.route("/upload-files")
