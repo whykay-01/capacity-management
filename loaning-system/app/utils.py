@@ -3,17 +3,13 @@ import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
 
-def load_dataframes(volume_mountpoint = '/data'):
+def load_dataframes():
     """
     this function loads the dataframes from the csv files
     :param volume_mountpoint: the path to the volume mountpoint (OPTIONAL)
     :return: list of loaded pandas dataframes
     """
-    
-    # TODO: Change this to the correct path 
-    # volume_mountpoint = "/data" 
-    volume_mountpoint = os.getcwd() + '/data'
-
+    volume_mountpoint = "/data" 
 
     # Set the path to the CSV files relative to the volume mountpoint
     user_cycle_csv_path = os.path.join(volume_mountpoint, "user_cycle.csv")
