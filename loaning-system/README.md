@@ -20,7 +20,13 @@ In additional to the "invisible difference," I have added the following features
 
 ## Quickstart Guide on Dockerizing the Loaning System Dashboard
 
-##### NOTE: Docker should be installed on the local machine prior to deploying the application.
+##### NOTE: Docker should be installed on the local machine prior to deploying the application. Apart from that, NGINX should be installed on the local machine as well.
+
+```
+brew update
+brew install docker
+brew install nginx
+```
 
 Before we start, it is important to move to the working directory:
 
@@ -28,17 +34,7 @@ Before we start, it is important to move to the working directory:
 cd loaning-system
 ```
 
-### Step 1
-
-Run the following command to build the docker image for the python application only (we will call the image `dashboard-image`):
-
-```bash
-docker build -t dashboard-image .
-```
-
-### Step 2
-
-Then, we need to mount our data folder to the container. We will use the following command to start the process:
+Here is the command which will get you started:
 
 ```bash
 docker compose up -d  --build
