@@ -4,7 +4,8 @@ import pandas as pd
 
 # importing helpers
 from app.utils import (load_dataframes, 
-                       fill_dict_user_equipment)
+                       fill_dict_user_equipment,
+                       test_generate_main_db)
 
 # importing functions which generate the figures
 from app.top5_bar_charts import (generate_top_5_bar_chart)
@@ -108,8 +109,7 @@ def confirmation_page():
     file.seek(0)
 
     # Save the uploaded file to a temporary location
-    # TODO: temp_file_path = os.path.join("/temp", filename)
-    temp_file_path = os.path.join(TEMPORARY_MOUNTPOINT, filename)
+    temp_file_path = os.path.join(TEMPORARY_MOUNTPOINT, "fresh_upload.csv")
     file.save(temp_file_path)
     session['csv_file'] = temp_file_path
 
@@ -124,16 +124,17 @@ def confirmation_page():
 def confirm_upload():
     file_path = session.get('csv_file')
     
-    try:
+    temp_check = test_generate_main_db(path=TEMPORARY_MOUNTPOINT, filename="/fresh_upload.csv")
+
+    if isinstance(temp_check, list):
+
         csv_data = pd.read_csv(file_path)
-        # FIXME: even the wrong file is uploaded
         csv_data.to_csv(os.path.join(VOLUME_MOUNTPOINT, "test.csv"), index=False)
 
         # Remove the temporary file after processing
         os.remove(file_path)
         del session['csv_file']
 
-        # TODO: Make a separate function in the utils.py file
         main_database = generate_main_db()
 
         # Generate the tables from the new source
@@ -160,15 +161,12 @@ def confirm_upload():
         flash(success, 'success')
         return redirect(url_for('index'))
     
-    except pd.errors.ParserError:
-        error = "The uploaded file is not in the correct format. Please upload a valid CSV file."
-        flash(error, 'error')
-        return redirect(url_for('upload_files'))
-    
-    except Exception as e:
+    else:
+        temp_file_path = session['csv_file']
+        os.remove(temp_file_path)
         error = "An error occurred during file processing. Please try again."
         flash(error, 'error')
-        return redirect(url_for('upload_files'))
+        return redirect(url_for('upload_files'))  
 
 
 @app.route("/cancel-upload")

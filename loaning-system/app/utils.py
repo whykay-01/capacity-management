@@ -1,4 +1,14 @@
 import os
+from app.database import (equipment_cycle_database, 
+                          user_cycle_database, 
+                          unique_user_equipment_database, 
+                          non_unique_user_equipment_database, 
+                          generate_main_db)
+
+from app.database_to_csv import (equipment_cycle_csv, 
+                                 user_cycle_csv, 
+                                 unique_user_equipment_csv, 
+                                 non_unique_user_equipment_csv)
 import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
@@ -87,3 +97,26 @@ def fill_dict_user_equipment(dataframe, user_cycle_df, user_type):
                 equipment_usertype_dict["Count"].append(1)
 
     return pd.DataFrame(data=equipment_usertype_dict)
+
+
+def test_generate_main_db(path, filename):
+    try:
+        main_database = generate_main_db(path, filename)
+
+        # Generate the tables from the new source
+        equipment_cycle = equipment_cycle_csv(
+            equipment_cycle_database(main_database)
+        )
+        user_cycle = user_cycle_csv(
+            user_cycle_database(main_database)
+        )
+        unique_user_equipment = unique_user_equipment_csv(
+            unique_user_equipment_database(main_database)
+        )
+        non_unique_user_equipment = non_unique_user_equipment_csv(
+            non_unique_user_equipment_database(main_database)
+        )
+        return [equipment_cycle, user_cycle, unique_user_equipment, non_unique_user_equipment]
+    
+    except Exception as e:
+        return True

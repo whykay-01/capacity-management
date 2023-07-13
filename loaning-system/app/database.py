@@ -4,11 +4,10 @@ which are used to produce the csv files.
 """
 import os
 
-def generate_main_db():
+def generate_main_db(path = "/data", filename = "/test.csv"):
     main_database = []
-    path = "/data"
     
-    with open(path + '/test.csv', encoding='utf-8') as f:
+    with open(path + filename, encoding='utf-8') as f:
         for line in f:
             main_database.append(line.rstrip("\n").split(",")[0:9])
             if line[0] == '':
