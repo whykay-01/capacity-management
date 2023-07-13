@@ -1,10 +1,12 @@
 import os
 from flask import *
 import pandas as pd
+from flask_httpauth import HTTPBasicAuth
 
 # importing helpers
 from app.utils import (load_dataframes, 
-                       fill_dict_user_equipment)
+                       fill_dict_user_equipment,
+                       test_generate_main_db)
 
 # importing functions which generate the figures
 from app.top5_bar_charts import (generate_top_5_bar_chart)
@@ -30,6 +32,18 @@ from app.database_to_csv import (
 
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
+
+users = {
+    "admin": "123"
+}
+
+@auth.verify_password
+def verify_password(username, password):
+    if username in users and password == users.get(username):
+        return username
+    
+
 
 # creating constants for the static folder path
 VOLUME_MOUNTPOINT = "/data"
@@ -74,6 +88,7 @@ def dashboard():
 
 
 @app.route("/")
+@auth.login_required
 def index():
     valid_dfs = load_dataframes()[1]
     try:
@@ -84,11 +99,13 @@ def index():
 
 
 @app.route("/upload-files")
+@auth.login_required
 def upload_files():
     return render_template("upload-files.html")
 
 
 @app.route("/confirmation-page", methods=["POST"])
+@auth.login_required
 def confirmation_page():
     file = request.files['database_snippet']
     filename= file.filename
@@ -108,8 +125,7 @@ def confirmation_page():
     file.seek(0)
 
     # Save the uploaded file to a temporary location
-    # TODO: temp_file_path = os.path.join("/temp", filename)
-    temp_file_path = os.path.join(TEMPORARY_MOUNTPOINT, filename)
+    temp_file_path = os.path.join(TEMPORARY_MOUNTPOINT, "fresh_upload.csv")
     file.save(temp_file_path)
     session['csv_file'] = temp_file_path
 
@@ -121,19 +137,21 @@ def confirmation_page():
 
 
 @app.route("/confirm-upload", methods=["POST"])
+@auth.login_required
 def confirm_upload():
     file_path = session.get('csv_file')
     
-    try:
+    temp_check = test_generate_main_db(path=TEMPORARY_MOUNTPOINT, filename="/fresh_upload.csv")
+
+    if isinstance(temp_check, list):
+
         csv_data = pd.read_csv(file_path)
-        # FIXME: even the wrong file is uploaded
         csv_data.to_csv(os.path.join(VOLUME_MOUNTPOINT, "test.csv"), index=False)
 
         # Remove the temporary file after processing
         os.remove(file_path)
         del session['csv_file']
 
-        # TODO: Make a separate function in the utils.py file
         main_database = generate_main_db()
 
         # Generate the tables from the new source
@@ -160,18 +178,16 @@ def confirm_upload():
         flash(success, 'success')
         return redirect(url_for('index'))
     
-    except pd.errors.ParserError:
-        error = "The uploaded file is not in the correct format. Please upload a valid CSV file."
+    else:
+        temp_file_path = session['csv_file']
+        os.remove(temp_file_path)
+        error = "An error occurred during file processing. Please try again and upload the file in the correct format!"
         flash(error, 'error')
-        return redirect(url_for('upload_files'))
-    
-    except Exception as e:
-        error = "An error occurred during file processing. Please try again."
-        flash(error, 'error')
-        return redirect(url_for('upload_files'))
+        return redirect(url_for('upload_files'))  
 
 
 @app.route("/cancel-upload")
+@auth.login_required
 def cancel_upload():
     temp_file_path = session['csv_file']
     os.remove(temp_file_path)
