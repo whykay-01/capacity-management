@@ -1,6 +1,7 @@
 import os
 from flask import *
 import pandas as pd
+from flask_httpauth import HTTPBasicAuth
 
 # importing helpers
 from app.utils import (load_dataframes, 
@@ -31,6 +32,18 @@ from app.database_to_csv import (
 
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
+
+users = {
+    "admin": "123"
+}
+
+@auth.verify_password
+def verify_password(username, password):
+    if username in users and password == users.get(username):
+        return username
+    
+
 
 # creating constants for the static folder path
 VOLUME_MOUNTPOINT = "/data"
@@ -75,6 +88,7 @@ def dashboard():
 
 
 @app.route("/")
+@auth.login_required
 def index():
     valid_dfs = load_dataframes()[1]
     try:
@@ -85,11 +99,13 @@ def index():
 
 
 @app.route("/upload-files")
+@auth.login_required
 def upload_files():
     return render_template("upload-files.html")
 
 
 @app.route("/confirmation-page", methods=["POST"])
+@auth.login_required
 def confirmation_page():
     file = request.files['database_snippet']
     filename= file.filename
@@ -121,6 +137,7 @@ def confirmation_page():
 
 
 @app.route("/confirm-upload", methods=["POST"])
+@auth.login_required
 def confirm_upload():
     file_path = session.get('csv_file')
     
@@ -170,6 +187,7 @@ def confirm_upload():
 
 
 @app.route("/cancel-upload")
+@auth.login_required
 def cancel_upload():
     temp_file_path = session['csv_file']
     os.remove(temp_file_path)

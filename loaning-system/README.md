@@ -20,12 +20,11 @@ In additional to the "invisible difference," I have added the following features
 
 ## Quickstart Guide on Dockerizing the Loaning System Dashboard
 
-##### NOTE: Docker should be installed on the local machine prior to deploying the application. Apart from that, NGINX should be installed on the local machine as well.
+##### NOTE: Please run the follwing commands in the terminal to ensure that you have Docker installed on your system:
 
 ```
 brew update
 brew install docker
-brew install nginx
 ```
 
 Before we start, it is important to move to the working directory:
