@@ -38,7 +38,7 @@ docker build -t dashboard-image .
 
 ### Step 2
 
-Then, we need to create a volume mounted to the container. We will use the following command to start the process:
+Then, we need to mount our data folder to the container. We will use the following command to start the process:
 
 ```bash
 docker compose up -d  --build
