@@ -1,6 +1,8 @@
 services:
-  dashboard:
-    image: dashboard-image:latest
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - ./data:/data
     ports:
