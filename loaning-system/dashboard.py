@@ -164,7 +164,7 @@ def confirm_upload():
     else:
         temp_file_path = session['csv_file']
         os.remove(temp_file_path)
-        error = "An error occurred during file processing. Please try again."
+        error = "An error occurred during file processing. Please try again and upload the file in the correct format!"
         flash(error, 'error')
         return redirect(url_for('upload_files'))  
 
