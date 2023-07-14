@@ -1,4 +1,4 @@
-## Explanation of the Loaning System Dashboard and the Codebase
+# Explanation of the Loaning System Dashboard and the Codebase
 
 To start deploying the system, one has to understand the codebase and the structure of the system. The system is divided into multiple parts. Before we dive into the codebase, I want to empathize that the system is built using the following technologies:
 
@@ -18,7 +18,7 @@ In additional to the "invisible difference," I have added the following features
 2. There is a user interface for the file upload.
 3. The file upload system is excessively robust, as it allows you not only to upload the file, but also generates all the other intermediary files required for the dashboard to work properly.
 
-## Quickstart Guide on Dockerizing the Loaning System Dashboard
+# Quickstart Guide on Dockerizing the Loaning System Dashboard
 
 ##### NOTE: Please run the follwing commands in the terminal to ensure that you have Docker installed on your system:
 
@@ -44,3 +44,7 @@ To open the system in the browser, run the following command and click on the su
 ```bash
 docker compose logs -f
 ```
+
+# Demo
+
+Click [here](https://drive.google.com/file/d/1UKXMfQVqtk0NGlanh6DNLxfgmebsqEZ0/view?usp=sharing) to see the video demonstration of the system.
