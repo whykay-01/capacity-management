@@ -34,8 +34,9 @@ from app.database_to_csv import (
 app = Flask(__name__)
 auth = HTTPBasicAuth()
 
+
 users = {
-    "admin": "123"
+    "test2": "test2"
 }
 
 @auth.verify_password
