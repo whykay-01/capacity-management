@@ -20,12 +20,14 @@ In additional to the "invisible difference," I have added the following features
 
 # Quickstart Guide on Dockerizing the Loaning System Dashboard
 
-##### NOTE: Please run the follwing commands in the terminal to ensure that you have Docker installed on your system:
+### NOTE: Please run the follwing commands in the terminal to ensure that you have Docker installed on your system:
 
 ```
 brew update
 brew install docker
 ```
+
+### NOTE: This is the guide for the Mac users.
 
 Before we start, it is important to move to the working directory:
 
@@ -49,4 +51,48 @@ docker compose logs -f
 
 Click [here](https://drive.google.com/file/d/1UKXMfQVqtk0NGlanh6DNLxfgmebsqEZ0/view?usp=sharing) to see the video demonstration of the system.
 
-docker run -d -v /Users/yan/git-repos/capacity-management/loaning-system/data:/data whykay01/loaning-system-image:2.0.0
+# How did I add the image to the server?
+
+1. I have created a Dockerfile in the root directory of the project.
+
+2. I have created a docker image using the following command:
+
+```bash
+docker build -t dashboard-image .
+```
+
+3. I tagged the image using the following command:
+
+```bash
+docker tag dashboard-image whykay01/loaning-system
+```
+
+4. I have pushed the image to the docker hub using the following command:
+
+```bash
+docker push whykay01/loaning-system
+```
+
+# Now to run the files, you have to run the following commands:
+
+```bash
+docker pull whykay01/loaning-system
+```
+
+```bash
+docker run -d -p 8050:8050 -v /Users/yan/git-repos/capacity-management/loaning-system/data:/data --name dashboard_container whykay01/loaning-system
+```
+
+in this example: `/Users/yan/git-repos/capacity-management/loaning-system/data` is the path to my data file, however, you have to change it to your path to the data file.
+
+```bash
+docker logs -f dashboard_container
+```
+
+```bash
+docker stop dashboard_container
+```
+
+```bash
+docker start dashboard_container
+```
