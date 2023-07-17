@@ -80,7 +80,7 @@ docker pull whykay01/loaning-system
 ```
 
 ```bash
-docker run -d -p 8050:8050 -v /Users/yan/git-repos/capacity-management/loaning-system/data:/data --name dashboard_container whykay01/loaning-system
+docker run -d -p 8050:8050 -v <YOUR_PATH_TO_THE_DATA_FOLDER>:/data --name dashboard_container whykay01/loaning-system
 ```
 
 in this example: `/Users/yan/git-repos/capacity-management/loaning-system/data` is the path to my data file, however, you have to change it to your path to the data file.

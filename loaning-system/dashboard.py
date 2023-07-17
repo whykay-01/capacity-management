@@ -51,6 +51,11 @@ def verify_password(username, password):
 
 # creating constants for the static folder path
 VOLUME_MOUNTPOINT = "/data"
+
+# check if the folder temp/ exists, if not, create it
+if not os.path.exists(VOLUME_MOUNTPOINT + "/temp"):
+    os.makedirs(VOLUME_MOUNTPOINT + "/temp")
+
 TEMPORARY_MOUNTPOINT = "/data/temp"
 
 def dashboard():
