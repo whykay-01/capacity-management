@@ -48,3 +48,5 @@ docker compose logs -f
 # Demo
 
 Click [here](https://drive.google.com/file/d/1UKXMfQVqtk0NGlanh6DNLxfgmebsqEZ0/view?usp=sharing) to see the video demonstration of the system.
+
+docker run -d -v /Users/yan/git-repos/capacity-management/loaning-system/data:/data whykay01/loaning-system-image:2.0.0

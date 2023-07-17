@@ -36,7 +36,10 @@ auth = HTTPBasicAuth()
 
 
 users = {
-    "test2": "test2"
+    "yan": "yan",
+    "admin": "admin",
+    "test": "test",
+    "lorraine": "lorraine"
 }
 
 @auth.verify_password
