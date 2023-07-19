@@ -161,7 +161,9 @@ def confirm_upload():
         os.remove(file_path)
         del session['csv_file']
 
+        # this is generating csv from the uploaded file
         main_database = generate_main_db()
+
 
         # Generate the tables from the new source
         equipment_cycle = equipment_cycle_csv(
@@ -176,6 +178,11 @@ def confirm_upload():
         non_unique_user_equipment = non_unique_user_equipment_csv(
             non_unique_user_equipment_database(main_database)
         )
+
+        if len(equipment_cycle) == 0 or len(user_cycle) == 0 or len(unique_user_equipment) == 0 or len(non_unique_user_equipment) == 0:
+            error = "The file you uploaded generated empty dataframes. Please try again and upload the correct file."
+            flash(error, 'error')
+            return redirect(url_for('upload_files'))
 
         # Upload new CSVs
         equipment_cycle.to_csv(os.path.join(VOLUME_MOUNTPOINT, "equipment_cycle.csv"), index=False)
