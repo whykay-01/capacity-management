@@ -4,3 +4,4 @@ numpy==1.25.0
 pandas==2.0.2
 plotly==5.15.0
 Flask-HTTPAuth==4.8.0
+python-dotenv==1.0.0

@@ -119,4 +119,4 @@ def test_generate_main_db(path, filename):
         return [equipment_cycle, user_cycle, unique_user_equipment, non_unique_user_equipment]
     
     except Exception as e:
-        return True
+        return False
