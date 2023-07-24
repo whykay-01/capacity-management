@@ -35,7 +35,29 @@ Before we start, it is important to move to the working directory:
 cd loaning-system
 ```
 
-Here is the command which will get you started:
+To deploy, please modify the .env file first. You have to change `ADMIN_ACCESS_TOKEN` to the md5-ed version of your password. To do so, please run the following command in the terminal:
+
+```bash
+echo -n "YOUR_PASSWORD" | md5
+```
+
+Then copy the hashed version of your password, and run the follwing command:
+
+Create .env file from example.env and change the values
+
+```bash
+cp example.env .env
+```
+
+Now, set the `ADMIN_ACCESS_TOKEN` to the hashed version of your password which we copied earlier. To do this, run the following command:
+
+```bash
+vim .env
+```
+
+Or simply open the newly created `.env` file in your favorite text editor and change the value of `ADMIN_ACCESS_TOKEN` to the hashed version of your password.
+
+After the environment variables are set, run the following command to deploy the system:
 
 ```bash
 docker compose up -d  --build

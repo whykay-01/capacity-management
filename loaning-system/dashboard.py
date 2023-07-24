@@ -13,6 +13,7 @@ from app.daily_equipment_timeline import generate_fig_time_cycle
 from app.monthly_equipment_timeline import generate_fig_time_cycle_month
 from app.non_unique_user_usage import generate_non_unique_user_equipment_bar
 import hashlib
+from dotenv import load_dotenv
 
 
 # importing functions which generate the DB inputs
@@ -36,6 +37,7 @@ from app.database_to_csv import (
 app = Flask(__name__)
 auth = HTTPBasicAuth()
 
+load_dotenv()
 ADMIN_ACCESS_TOKEN = os.getenv("ADMIN_ACCESS_TOKEN")
 
 users = {"admin": ADMIN_ACCESS_TOKEN}

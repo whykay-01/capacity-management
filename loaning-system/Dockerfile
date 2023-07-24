@@ -4,6 +4,7 @@ FROM python:3.11
 ADD dashboard.py .
 ADD app/ ./app
 ADD templates/ ./templates
+ADD .env .
 # installing dependencies
 COPY requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir --upgrade -r ./requirements.txt
