@@ -12,3 +12,4 @@ loaning-system/app/__pycache__
 original-datasources/
 testing-data.csv
 loaning-system/venv
+.env
