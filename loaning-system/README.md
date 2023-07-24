@@ -20,7 +20,9 @@ In additional to the "invisible difference," I have added the following features
 
 # Quickstart Guide on Dockerizing the Loaning System Dashboard
 
-### NOTE: Please run the follwing commands in the terminal to ensure that you have Docker installed on your system:
+Prereqs: Homebrew package manager for Mac OS/Linux and Linux system
+
+### NOTE: Please run the following commands in the terminal to ensure that you have Docker installed on your system:
 
 ```
 brew update
