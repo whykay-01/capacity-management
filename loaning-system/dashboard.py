@@ -9,11 +9,13 @@ from app.utils import (load_dataframes,
                        test_generate_main_db)
 
 # importing functions which generate the figures
-from app.top5_bar_charts import (generate_top_5_bar_chart)
-from app.pie_chart import (generate_fig_pie)
-from app.daily_equipment_timeline import (generate_fig_time_cycle)
-from app.monthly_equipment_timeline import (generate_fig_time_cycle_month)
-from app.non_unique_user_usage import (generate_non_unique_user_equipment_bar)
+from app.top5_bar_charts import generate_top_5_bar_chart
+from app.pie_chart import generate_fig_pie
+from app.daily_equipment_timeline import generate_fig_time_cycle
+from app.monthly_equipment_timeline import generate_fig_time_cycle_month
+from app.non_unique_user_usage import generate_non_unique_user_equipment_bar
+import hashlib
+
 
 # importing functions which generate the DB inputs
 from app.database import (
@@ -34,19 +36,22 @@ from app.database_to_csv import (
 app = Flask(__name__)
 auth = HTTPBasicAuth()
 
+ADMIN_ACCESS_TOKEN = os.getenv("ADMIN_ACCESS_TOKEN")
 
-users = {
-    "yan": "yan",
-    "admin": "admin",
-    "test": "test",
-    "lorraine": "lorraine"
-}
+users = {"admin": ADMIN_ACCESS_TOKEN}
+
+
+def calculate_md5_hash(data):
+    md5_hash = hashlib.md5()
+    md5_hash.update(data.encode("utf-8"))
+    return md5_hash.hexdigest()
+
 
 @auth.verify_password
 def verify_password(username, password):
-    if username in users and password == users.get(username):
+    if username in users and calculate_md5_hash(password) == users.get(username):
         return username
-    
+
 
 
 # creating constants for the static folder path
