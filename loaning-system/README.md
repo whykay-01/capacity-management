@@ -24,7 +24,7 @@ Prereqs: Homebrew package manager for Mac OS/Linux and Linux system
 
 ### NOTE: Please run the following commands in the terminal to ensure that you have Docker installed on your system:
 
-```
+```bash
 brew update
 brew install docker
 ```
@@ -33,7 +33,7 @@ brew install docker
 
 Before we start, it is important to move to the working directory:
 
-```
+```bash
 cd loaning-system
 ```
 
